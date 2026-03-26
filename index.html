@@ -3,945 +3,307 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard de Vida</title>
+<title>Asistente Personal y Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f0f4f8;
-  --surface: #ffffff;
-  --surface2: #e8f0f7;
-  --surface3: #d6e4f0;
-  --border: #c2d4e3;
-  --accent: #1a6ea8;
-  --accent2: #1a8c6e;
-  --accent3: #0f8fc4;
-  --text: #1a2535;
-  --muted: #7a95ae;
-  --danger: #d95a4a;
-  --success: #1a8c6e;
+  --bg: #f0f4f8; --surface: #ffffff; --surface2: #e8f0f7; --surface3: #d6e4f0;
+  --border: #c2d4e3; --accent: #1a6ea8; --accent2: #1a8c6e; --accent3: #0f8fc4;
+  --text: #1a2535; --muted: #7a95ae; --danger: #d95a4a; --success: #1a8c6e;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;}
 
-/* NAV */
-.nav-tabs{display:flex;align-items:center;gap:3px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;}
-.nav-tab{padding:6px 14px;border-radius:5px;border:none;background:transparent;color:var(--muted);font-family:'Syne',sans-serif;font-size:0.74rem;font-weight:600;cursor:pointer;transition:all 0.15s;letter-spacing:0.02em;white-space:nowrap;}
+/* NAV & HEADER */
+.nav-tabs{display:flex;align-items:center;gap:3px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;overflow-x:auto;}
+.nav-tab{padding:6px 14px;border-radius:5px;border:none;background:transparent;color:var(--muted);font-family:'Syne',sans-serif;font-size:0.74rem;font-weight:600;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
 .nav-tab.active{background:var(--surface);color:var(--accent);box-shadow:0 1px 4px rgba(26,90,140,0.1);}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 26px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(240,244,248,0.97);backdrop-filter:blur(12px);z-index:100;flex-wrap:wrap;gap:14px;}
+.logo{font-family:'DM Serif Display',serif;font-size:1.3rem;} .logo span{color:var(--accent);font-style:italic;}
+.date-display{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);}
 
-/* HEADER */
-.header{display:flex;align-items:center;justify-content:space-between;padding:14px 26px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(240,244,248,0.97);backdrop-filter:blur(12px);z-index:100;gap:14px;flex-wrap:wrap;}
-.logo{font-family:'DM Serif Display',serif;font-size:1.3rem;letter-spacing:-0.02em;white-space:nowrap;}
-.logo span{color:var(--accent);font-style:italic;}
-.header-center{flex:1;display:flex;justify-content:center;}
-.header-right{display:flex;align-items:center;gap:8px;}
-.date-display{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.04em;white-space:nowrap;}
-
-/* BUTTONS */
-.btn{padding:7px 15px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:500;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
-.btn:hover{border-color:var(--muted);background:var(--surface3);}
+/* BOTONES & INPUTS */
+.btn{padding:7px 15px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:0.75rem;font-weight:500;cursor:pointer;transition:all 0.15s;}
+.btn:hover{background:var(--surface3);}
 .btn-accent{background:var(--accent);color:#fff;border-color:var(--accent);}
-.btn-accent:hover{opacity:0.88;background:var(--accent);}
 .btn-green{background:var(--accent2);color:#fff;border-color:var(--accent2);}
-.btn-green:hover{opacity:0.88;}
 .btn-ghost{background:transparent;border-color:transparent;color:var(--muted);}
-.btn-ghost:hover{color:var(--text);border-color:var(--border);}
 .btn-sm{padding:5px 11px;font-size:0.71rem;}
 .btn-danger{background:#fdf0ee;color:var(--danger);border-color:#f5c8c2;}
-.btn-danger:hover{background:#fce0db;}
+input,textarea,select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Syne',sans-serif;font-size:0.8rem;padding:8px 12px;width:100%;outline:none;}
+input:focus,textarea:focus{border-color:var(--accent);}
 
-/* PAGES */
-.page{display:none;}
-.page.active{display:block;}
-
-/* DASHBOARD */
+/* LAYOUT GENERAL */
+.page{display:none;} .page.active{display:block;}
 .main{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 65px);}
-.main.focus-pro .panel-personal{display:none;}
-.main.focus-pro .panel-pro{grid-column:1/-1;}
-.main.focus-personal .panel-pro{display:none;}
-.main.focus-personal .panel-personal{grid-column:1/-1;}
 .panel{padding:26px;border-right:1px solid var(--border);}
 .panel-personal{border-right:none;}
-.panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
-.panel-title{font-family:'DM Serif Display',serif;font-size:1.05rem;display:flex;align-items:center;gap:9px;}
-.panel-badge{font-family:'DM Mono',monospace;font-size:0.58rem;padding:3px 8px;border-radius:20px;letter-spacing:0.07em;font-weight:500;}
-.badge-pro{background:rgba(26,110,168,0.1);color:var(--accent);border:1px solid rgba(26,110,168,0.25);}
-.badge-personal{background:rgba(26,140,110,0.1);color:var(--accent2);border:1px solid rgba(26,140,110,0.25);}
+.main.focus-pro .panel-personal, .main.focus-personal .panel-pro{display:none;}
+.main.focus-pro .panel-pro, .main.focus-personal .panel-personal{grid-column:1/-1;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:17px;margin-bottom:13px;}
+.card-title{font-size:0.67rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:13px;}
+.empty{color:var(--muted);font-size:0.8rem;text-align:center;padding:20px;}
 
-/* CARDS */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:17px;margin-bottom:13px;box-shadow:0 1px 5px rgba(26,90,140,0.06);}
-.card-title{font-size:0.67rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:13px;display:flex;align-items:center;gap:7px;}
-
-/* INPUTS */
-input,textarea,select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Syne',sans-serif;font-size:0.8rem;padding:8px 12px;width:100%;transition:border-color 0.15s;outline:none;}
-input:focus,textarea:focus,select:focus{border-color:var(--accent);}
-textarea{resize:vertical;}
-select option{background:var(--surface);}
-.input-label{font-size:0.67rem;color:var(--muted);margin-bottom:4px;letter-spacing:0.03em;}
-
-/* PROJECTS */
-.project-form{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:7px;margin-bottom:11px;align-items:end;}
-.project-list{display:flex;flex-direction:column;gap:6px;}
-.project-item{display:grid;grid-template-columns:1fr auto auto auto;gap:9px;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;transition:border-color 0.15s;}
-.project-item:hover{border-color:var(--muted);}
-.project-name{font-size:0.8rem;font-weight:500;}
-.project-client{font-size:0.67rem;color:var(--muted);font-family:'DM Mono',monospace;}
-.status-badge{font-family:'DM Mono',monospace;font-size:0.59rem;padding:3px 8px;border-radius:20px;cursor:pointer;transition:all 0.15s;}
-.status-pendiente{background:rgba(217,150,30,0.1);color:#a8720a;border:1px solid rgba(217,150,30,0.3);}
-.status-proceso{background:rgba(26,110,168,0.1);color:var(--accent);border:1px solid rgba(26,110,168,0.3);}
-.status-entregado{background:rgba(26,140,110,0.1);color:var(--success);border:1px solid rgba(26,140,110,0.3);}
-.project-date{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);}
-.delete-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.7rem;padding:3px;border-radius:4px;transition:color 0.15s;line-height:1;}
-.delete-btn:hover{color:var(--danger);}
-
-/* AI */
-.ai-response{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:0.77rem;line-height:1.7;white-space:pre-wrap;margin-top:9px;min-height:60px;font-family:'DM Mono',monospace;display:none;}
-.ai-response.visible{display:block;}
-.ai-label{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent);letter-spacing:0.07em;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
-.ai-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:pulse 1.2s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.typing-cursor{animation:blink 0.8s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-
-/* TIMER */
-.timer-display{font-family:'DM Serif Display',serif;font-size:2.5rem;letter-spacing:-0.04em;text-align:center;padding:10px 0;color:var(--accent);}
-.timer-label{text-align:center;font-size:0.68rem;color:var(--muted);margin-bottom:8px;font-family:'DM Mono',monospace;min-height:16px;}
-.timer-controls{display:flex;gap:7px;justify-content:center;}
-
-/* HABITS */
-.habit-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.habit-btn{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:10px 13px;cursor:pointer;transition:all 0.2s;color:var(--text);font-family:'Syne',sans-serif;font-size:0.77rem;font-weight:500;}
-.habit-btn.done{background:rgba(26,140,110,0.08);border-color:rgba(26,140,110,0.35);color:var(--accent2);}
-.habit-btn:hover{border-color:var(--muted);}
-.habit-check{margin-left:auto;width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);transition:all 0.2s;display:flex;align-items:center;justify-content:center;font-size:0.56rem;}
-.habit-btn.done .habit-check{background:var(--accent2);border-color:var(--accent2);color:#fff;}
-
-/* EXPENSES */
-.expense-form{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;margin-bottom:9px;align-items:end;}
-.expense-list{display:flex;flex-direction:column;gap:5px;max-height:150px;overflow-y:auto;}
-.expense-item{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 11px;font-size:0.77rem;}
-.expense-amount{font-family:'DM Mono',monospace;font-size:0.79rem;color:var(--danger);}
-.expense-amount.income{color:var(--success);}
-.expense-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:9px;}
-.stat-box{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px;text-align:center;}
-.stat-val{font-family:'DM Mono',monospace;font-size:0.94rem;font-weight:500;margin-bottom:2px;}
-.stat-label{font-size:0.59rem;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;}
-
-/* PRIORITIES */
+/* LISTAS Y PRIORIDADES */
 .priority-list{display:flex;flex-direction:column;gap:6px;}
-.priority-item{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;transition:all 0.2s;}
+.priority-item{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;}
 .priority-item.done-task{opacity:0.5;}
 .priority-item.done-task .priority-text{text-decoration:line-through;}
-.priority-num{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--accent);min-width:17px;}
+.priority-num{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--accent);}
 .priority-text{flex:1;font-size:0.79rem;font-weight:500;background:none;border:none;color:var(--text);font-family:'Syne',sans-serif;outline:none;}
-.priority-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);cursor:pointer;transition:all 0.2s;background:none;display:flex;align-items:center;justify-content:center;font-size:0.6rem;}
-.priority-item.done-task .priority-check{background:var(--accent);border-color:var(--accent);color:#fff;}
+.priority-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);cursor:pointer;background:none;}
+.priority-item.done-task .priority-check{background:var(--accent);border-color:var(--accent);}
 
-hr.divider{border:none;border-top:1px solid var(--border);margin:11px 0;}
-
-/* GSUITE PAGE */
-.gsuite-page{padding:26px;max-width:1400px;margin:0 auto;}
-.gsuite-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;}
-.gwidget{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:18px;box-shadow:0 1px 5px rgba(26,90,140,0.06);}
-.gwidget-header{display:flex;align-items:center;gap:9px;margin-bottom:14px;}
+/* NOTICIAS, GSUITE Y RECETAS (Estilos simplificados) */
 .gwidget-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0;}
-.gwidget-icon.gmail{background:#fce8e6;}
-.gwidget-icon.calendar{background:#e8f0fe;}
-.gwidget-icon.drive{background:#e6f4ea;}
-.gwidget-icon.tasks{background:#fef7e0;}
-.gwidget-title{font-size:0.88rem;font-weight:600;}
-.gwidget-subtitle{font-size:0.67rem;color:var(--muted);}
-.g-item{display:flex;align-items:flex-start;gap:9px;padding:8px 9px;border-radius:8px;border:1px solid transparent;margin-bottom:4px;cursor:pointer;transition:all 0.15s;}
-.g-item:hover{background:var(--surface2);border-color:var(--border);}
-.g-item-dot{width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0;}
-.g-item-dot.unread{background:var(--accent);}
-.g-item-dot.read{background:var(--border);}
-.g-item-content{flex:1;min-width:0;}
-.g-item-title{font-size:0.77rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.g-item-sub{font-size:0.67rem;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.g-item-time{font-family:'DM Mono',monospace;font-size:0.61rem;color:var(--muted);flex-shrink:0;}
-.gcal-event{display:flex;gap:9px;padding:7px 9px;border-radius:8px;margin-bottom:4px;cursor:pointer;border:1px solid transparent;transition:all 0.15s;}
-.gcal-event:hover{background:var(--surface2);border-color:var(--border);}
-.gcal-bar{width:3px;border-radius:2px;flex-shrink:0;}
-.gcal-title{font-size:0.77rem;font-weight:500;}
-.gcal-time{font-size:0.67rem;color:var(--muted);font-family:'DM Mono',monospace;}
-
-/* NEWS PAGE */
-.news-page{padding:26px;max-width:1400px;margin:0 auto;}
+.gwidget-icon.gmail{background:#fce8e6;} .gwidget-icon.calendar{background:#e8f0fe;}
+.gwidget-icon.drive{background:#e6f4ea;} .gwidget-icon.tasks{background:#fef7e0;}
 .news-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:11px;}
 .news-title{font-family:'DM Serif Display',serif;font-size:1.45rem;}
-.news-tabs{display:flex;gap:5px;flex-wrap:wrap;}
-.news-tab{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Syne',sans-serif;font-size:0.73rem;font-weight:600;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:4px;}
-.news-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.news-tab:hover:not(.active){border-color:var(--accent);color:var(--accent);}
-.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:13px;}
-.news-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all 0.2s;box-shadow:0 1px 4px rgba(26,90,140,0.05);cursor:pointer;}
-.news-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(26,90,140,0.1);border-color:var(--accent);}
-.news-card-cat{font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.1em;text-transform:uppercase;padding:11px 13px 0;font-weight:600;}
-.news-card-title{font-size:0.84rem;font-weight:600;line-height:1.4;padding:6px 13px;}
-.news-card-summary{font-size:0.74rem;color:var(--muted);line-height:1.5;padding:0 13px 9px;}
-.news-card-footer{display:flex;justify-content:space-between;align-items:center;padding:8px 13px;border-top:1px solid var(--border);background:var(--surface2);}
-.news-source,.news-time{font-family:'DM Mono',monospace;font-size:0.61rem;color:var(--muted);}
-.news-loading{text-align:center;padding:40px;color:var(--muted);font-size:0.77rem;font-family:'DM Mono',monospace;grid-column:1/-1;}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;margin-right:7px;vertical-align:middle;}
-@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* RECIPE PAGE */
-.recipe-page{padding:26px;max-width:1400px;margin:0 auto;}
-.recipe-page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:11px;}
-.recipe-page-title{font-family:'DM Serif Display',serif;font-size:1.45rem;}
-.recipe-cat-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px;}
-.recipe-cat-tab{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:600;cursor:pointer;transition:all 0.15s;}
-.recipe-cat-tab.active{background:var(--accent2);color:#fff;border-color:var(--accent2);}
-.recipe-cat-tab:hover:not(.active){border-color:var(--accent2);color:var(--accent2);}
-.recipe-layout{display:grid;grid-template-columns:1fr 370px;gap:16px;}
-.recipe-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:11px;align-content:start;}
-.recipe-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 4px rgba(26,90,140,0.05);}
-.recipe-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(26,90,140,0.1);border-color:var(--accent2);}
-.recipe-card.selected{border-color:var(--accent2);box-shadow:0 0 0 2px rgba(26,140,110,0.2);}
-.recipe-emoji{font-size:2rem;text-align:center;padding:16px 0 7px;background:var(--surface2);}
-.recipe-card-body{padding:11px;}
-.recipe-card-name{font-size:0.83rem;font-weight:600;margin-bottom:4px;}
-.recipe-card-cat{display:inline-block;font-family:'DM Mono',monospace;font-size:0.57rem;letter-spacing:0.06em;padding:2px 7px;border-radius:10px;background:rgba(26,140,110,0.1);color:var(--accent2);border:1px solid rgba(26,140,110,0.2);margin-bottom:5px;}
-.recipe-card-meta{font-size:0.67rem;color:var(--muted);display:flex;gap:9px;}
-.recipe-detail{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:20px;position:sticky;top:80px;max-height:calc(100vh - 105px);overflow-y:auto;box-shadow:0 1px 5px rgba(26,90,140,0.06);}
-.recipe-detail-empty{text-align:center;padding:38px 18px;color:var(--muted);font-size:0.77rem;font-family:'DM Mono',monospace;}
-.recipe-detail-name{font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:5px;}
-.recipe-detail-emoji{font-size:2.3rem;text-align:center;margin-bottom:12px;}
-.recipe-section-title{font-size:0.67rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:13px 0 7px;}
-.ingredient-list{list-style:none;}
-.ingredient-item{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.79rem;}
-.ingredient-item:last-child{border-bottom:none;}
-.ingredient-bullet{width:5px;height:5px;border-radius:50%;background:var(--accent2);flex-shrink:0;}
-.step-list{list-style:none;}
-.step-item{display:flex;gap:11px;margin-bottom:9px;padding:9px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);font-size:0.78rem;line-height:1.5;}
-.step-num{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--accent2);flex-shrink:0;min-width:17px;}
-.shopping-list-btn{width:100%;margin-top:12px;background:rgba(26,140,110,0.08);color:var(--accent2);border:1px solid rgba(26,140,110,0.3);}
-.shopping-list-btn:hover{background:rgba(26,140,110,0.15);}
+/* RECETARIO */
+.recipe-page{padding:26px;max-width:1400px;margin:0 auto;display:grid;grid-template-columns:300px 1fr;gap:20px;}
+.recipe-list{display:grid;gap:10px;}
+.recipe-card{display:flex;align-items:center;gap:12px;padding:12px;background:var(--surface2);border-radius:10px;cursor:pointer;}
+.recipe-card:hover{background:var(--surface3);}
+.recipe-detail{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:25px;}
 
-/* MODALS */
-.modal-overlay{position:fixed;inset:0;background:rgba(26,37,53,0.42);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:18px;}
-.modal-overlay.open{display:flex;}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:24px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;box-shadow:0 8px 36px rgba(26,90,140,0.15);}
-.modal-title{font-family:'DM Serif Display',serif;font-size:1.18rem;margin-bottom:16px;}
-.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;}
-.modal-actions{display:flex;gap:7px;justify-content:flex-end;margin-top:14px;}
-.ingredient-input-row{display:flex;gap:5px;margin-bottom:5px;}
-.step-input-row{display:flex;gap:5px;align-items:flex-start;margin-bottom:5px;}
-.step-input-row textarea{min-height:55px;}
-
-/* SHOPPING */
-.shopping-item{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:8px;border:1px solid var(--border);margin-bottom:5px;font-size:0.79rem;cursor:pointer;transition:all 0.15s;}
-.shopping-item.checked{background:rgba(26,140,110,0.06);text-decoration:line-through;color:var(--muted);}
-.shopping-check{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.53rem;}
-.shopping-item.checked .shopping-check{background:var(--accent2);border-color:var(--accent2);color:#fff;}
-
-/* MISC */
-.focus-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;}
-.toast{position:fixed;bottom:20px;right:20px;background:var(--surface);border:1px solid var(--accent);border-radius:8px;padding:10px 15px;font-size:0.74rem;color:var(--accent);font-family:'DM Mono',monospace;z-index:999;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none;box-shadow:0 4px 16px rgba(26,110,168,0.14);}
-.toast.show{opacity:1;transform:translateY(0);}
-.empty{text-align:center;color:var(--muted);font-size:0.72rem;padding:13px;font-family:'DM Mono',monospace;}
-.info-banner{background:rgba(26,110,168,0.06);border:1px solid rgba(26,110,168,0.2);border-radius:11px;padding:13px 16px;margin-bottom:18px;display:flex;align-items:flex-start;gap:11px;font-size:0.75rem;line-height:1.6;}
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-@media(max-width:900px){
-  .main{grid-template-columns:1fr;}
-  .panel{border-right:none;border-bottom:1px solid var(--border);}
-  .project-form{grid-template-columns:1fr 1fr;}
-  .recipe-layout{grid-template-columns:1fr;}
-  .recipe-detail{position:relative;top:0;max-height:none;}
-}
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a2535;color:#fff;padding:9px 18px;border-radius:8px;font-size:0.77rem;opacity:0;pointer-events:none;transition:all 0.3s;z-index:9999;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="logo">vida<span>.</span>dashboard</div>
+<div class="header">
+  <div class="logo">Vida<span>.</span></div>
   <div class="header-center">
-    <nav class="nav-tabs">
+    <div class="nav-tabs">
       <button class="nav-tab active" onclick="showPage('dashboard')">🏠 Dashboard</button>
-      <button class="nav-tab" onclick="showPage('gsuite')">🔷 Google Suite</button>
-      <button class="nav-tab" onclick="showPage('news')">📰 Noticias</button>
+      <button class="nav-tab" onclick="showPage('gsuite')">☁️ Centro Google</button>
       <button class="nav-tab" onclick="showPage('recipes')">🍳 Recetario</button>
-    </nav>
+      <button class="nav-tab" onclick="showPage('shopping')">🛒 Supermercado</button>
+      <button class="nav-tab" onclick="showPage('notes')">🎙️ Notas y Audio</button>
+    </div>
   </div>
   <div class="header-right">
-    <span class="date-display" id="dateDisplay"></span>
-    <button class="btn" id="focusBtn" onclick="toggleFocus()" style="display:flex;align-items:center;gap:6px">
-      <span class="focus-dot"></span><span id="focusBtnText">Modo Enfoque</span>
-    </button>
-    <button class="btn" onclick="exportData()">↓ JSON</button>
+    <div class="date-display" id="dateDisplay"></div>
   </div>
-</header>
+</div>
 
-<!-- DASHBOARD -->
 <div class="page active" id="page-dashboard">
   <div class="main" id="mainLayout">
-    <div class="panel panel-pro">
-      <div class="panel-header">
-        <div class="panel-title">Panel Profesional <span class="panel-badge badge-pro">TRABAJO</span></div>
-      </div>
-      <div class="card">
-        <div class="card-title">◈ Gestor de Proyectos</div>
-        <div class="project-form">
-          <div><div class="input-label">Cliente</div><input type="text" id="projClient" placeholder="Cliente"></div>
-          <div><div class="input-label">Proyecto</div><input type="text" id="projName" placeholder="Descripción"></div>
-          <div><div class="input-label">Fecha límite</div><input type="date" id="projDate"></div>
-          <div><div class="input-label">&nbsp;</div><button class="btn btn-accent" onclick="addProject()">+</button></div>
-        </div>
-        <div class="project-list" id="projectList"><div class="empty">Sin proyectos activos</div></div>
-      </div>
-      <div class="card">
-        <div class="card-title">✦ Generador de Correos IA</div>
-        <textarea id="emailIdea" rows="3" placeholder="Escribe tu idea... ej: 'seguimiento propuesta cliente X, llevan 1 semana sin responder'"></textarea>
-        <div style="display:flex;gap:7px;margin-top:7px;align-items:center">
-          <button class="btn btn-accent" onclick="generateEmail()">Generar borrador</button>
-          <button class="btn btn-ghost" id="copyBtn" onclick="copyEmail()" style="display:none">Copiar</button>
-          <span id="aiStatus" style="font-size:0.67rem;color:var(--muted);font-family:'DM Mono',monospace"></span>
-        </div>
-        <div id="aiEmailResult" class="ai-response"></div>
-      </div>
-      <div class="card">
-        <div class="card-title">◷ Tracking de Horas</div>
-        <div style="margin-bottom:7px"><input type="text" id="timerTask" placeholder="Nombre de la tarea..."></div>
-        <div class="timer-label" id="timerLabel">Sin tarea activa</div>
-        <div class="timer-display" id="timerDisplay">00:00:00</div>
-        <div class="timer-controls">
-          <button class="btn btn-accent" id="timerStartBtn" onclick="startTimer()">▶ Iniciar</button>
-          <button class="btn" onclick="pauseTimer()" id="pauseBtn" style="display:none">⏸ Pausar</button>
-          <button class="btn btn-ghost" onclick="resetTimer()">↺ Reset</button>
-        </div>
-      </div>
-    </div>
+    <div class="panel panel-pro" style="display:none;"></div>
 
-    <div class="panel panel-personal">
+    <div class="panel panel-personal" style="grid-column: 1 / -1;">
       <div class="panel-header">
-        <div class="panel-title">Panel Personal <span class="panel-badge badge-personal">VIDA</span></div>
+        <div class="panel-title">Panel de Asistente Personal</div>
       </div>
       <div class="card">
         <div class="card-title">◆ Agenda de Prioridades — HOY</div>
-        <div class="priority-list">
-          <div class="priority-item" id="pr-0"><span class="priority-num">1</span><input class="priority-text" type="text" placeholder="Prioridad #1 del día..." oninput="savePriorities()"><button class="priority-check" onclick="togglePriority(0)"></button></div>
-          <div class="priority-item" id="pr-1"><span class="priority-num">2</span><input class="priority-text" type="text" placeholder="Prioridad #2 del día..." oninput="savePriorities()"><button class="priority-check" onclick="togglePriority(1)"></button></div>
-          <div class="priority-item" id="pr-2"><span class="priority-num">3</span><input class="priority-text" type="text" placeholder="Prioridad #3 del día..." oninput="savePriorities()"><button class="priority-check" onclick="togglePriority(2)"></button></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">◉ Hábitos de Hoy</div>
-        <div class="habit-grid">
-          <button class="habit-btn" id="hab-agua" onclick="toggleHabit('agua')"><span>💧</span> Agua<span class="habit-check">✓</span></button>
-          <button class="habit-btn" id="hab-ejercicio" onclick="toggleHabit('ejercicio')"><span>🏃</span> Ejercicio<span class="habit-check">✓</span></button>
-          <button class="habit-btn" id="hab-lectura" onclick="toggleHabit('lectura')"><span>📖</span> Lectura<span class="habit-check">✓</span></button>
-          <button class="habit-btn" id="hab-meditacion" onclick="toggleHabit('meditacion')"><span>🧘</span> Meditación<span class="habit-check">✓</span></button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">◎ Control de Gastos</div>
-        <div class="expense-form">
-          <div><div class="input-label">Descripción</div><input type="text" id="expDesc" placeholder="Concepto"></div>
-          <div><div class="input-label">Monto ($)</div><input type="number" id="expAmount" placeholder="0.00" step="0.01"></div>
-          <div><div class="input-label">Tipo</div><select id="expType"><option value="gasto">Gasto</option><option value="ingreso">Ingreso</option></select></div>
-        </div>
-        <button class="btn btn-accent" style="width:100%;margin-bottom:9px" onclick="addExpense()">Registrar movimiento</button>
-        <div class="expense-list" id="expenseList"><div class="empty">Sin movimientos hoy</div></div>
-        <hr class="divider">
-        <div class="expense-summary">
-          <div class="stat-box"><div class="stat-val" id="totalIncome" style="color:var(--success)">$0</div><div class="stat-label">Ingresos</div></div>
-          <div class="stat-box"><div class="stat-val" id="totalExpense" style="color:var(--danger)">$0</div><div class="stat-label">Gastos</div></div>
-          <div class="stat-box"><div class="stat-val" id="totalBalance">$0</div><div class="stat-label">Balance</div></div>
+        <div class="priority-list" id="dashboardPriorities">
+          <div class="priority-item" id="pr-0"><span class="priority-num">1</span><input class="priority-text" type="text" placeholder="Prioridad #1 del día..."><button class="priority-check"></button></div>
+          <div class="priority-item" id="pr-1"><span class="priority-num">2</span><input class="priority-text" type="text" placeholder="Prioridad #2 del día..."><button class="priority-check"></button></div>
+          <div class="priority-item" id="pr-2"><span class="priority-num">3</span><input class="priority-text" type="text" placeholder="Prioridad #3 del día..."><button class="priority-check"></button></div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- GOOGLE SUITE -->
 <div class="page" id="page-gsuite">
-  <div class="gsuite-page">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:11px">
-      <div>
-        <div style="font-family:'DM Serif Display',serif;font-size:1.45rem">Google Suite</div>
-        <div style="font-size:0.72rem;color:var(--muted);margin-top:2px">Tus herramientas conectadas en un solo lugar</div>
-      </div>
-      <button class="btn btn-accent" onclick="connectGoogle()">🔗 Conectar con Google</button>
-    </div>
-    <div class="info-banner">
-      <span style="font-size:1.05rem;flex-shrink:0">ℹ️</span>
-      <div><strong>Vista previa con datos de muestra.</strong> Para activar la integración real, haz clic en "Conectar con Google" y configura tu OAuth2 Client ID en <a href="https://console.cloud.google.com" target="_blank" style="color:var(--accent)">Google Cloud Console</a> habilitando las APIs de Gmail, Calendar, Drive y Tasks. <span style="color:var(--muted)">Los datos de abajo son simulados.</span></div>
-    </div>
-    <div class="gsuite-grid">
-      <div class="gwidget">
-        <div class="gwidget-header">
-          <div class="gwidget-icon gmail">📧</div>
-          <div><div class="gwidget-title">Gmail</div><div class="gwidget-subtitle">3 sin leer</div></div>
-          <button class="btn btn-sm" style="margin-left:auto" onclick="showToast('Abre Gmail para ver todos los correos')">Ver todos →</button>
-        </div>
-        <div id="gmailList"></div>
-      </div>
-      <div class="gwidget">
-        <div class="gwidget-header">
+  <div style="padding:26px;max-width:1400px;margin:0 auto;">
+    <div class="news-header"><div class="news-title">☁️ Ecosistema Google (Workspace)</div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;">
+      
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
           <div class="gwidget-icon calendar">📅</div>
-          <div><div class="gwidget-title">Google Calendar</div><div class="gwidget-subtitle">Eventos de hoy</div></div>
-          <button class="btn btn-sm" style="margin-left:auto" onclick="showToast('Abre Google Calendar para tu agenda completa')">Ver →</button>
+          <div><div style="font-weight:600;font-size:0.88rem;">Google Calendar</div><div style="font-size:0.67rem;color:var(--muted)">Próximos eventos</div></div>
         </div>
-        <div id="calendarList"></div>
+        <div class="empty">Sincronización activa: Sin eventos hoy</div>
       </div>
-      <div class="gwidget">
-        <div class="gwidget-header">
+
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
           <div class="gwidget-icon drive">📁</div>
-          <div><div class="gwidget-title">Google Drive</div><div class="gwidget-subtitle">Archivos recientes</div></div>
-          <button class="btn btn-sm" style="margin-left:auto" onclick="showToast('Abre Google Drive para ver tus archivos')">Abrir →</button>
+          <div><div style="font-weight:600;font-size:0.88rem;">Google Drive</div><div style="font-size:0.67rem;color:var(--muted)">Archivos recientes</div></div>
         </div>
-        <div id="driveList"></div>
+        <div class="empty">Carpeta "Asistente Personal" sincronizada</div>
       </div>
-      <div class="gwidget">
-        <div class="gwidget-header">
-          <div class="gwidget-icon tasks">✅</div>
-          <div><div class="gwidget-title">Google Tasks</div><div class="gwidget-subtitle">Tareas pendientes</div></div>
-          <button class="btn btn-sm btn-accent" style="margin-left:auto" onclick="showToast('Conecta Google Tasks para añadir tareas')">+ Tarea</button>
-        </div>
-        <div id="tasksList"></div>
-      </div>
+
     </div>
   </div>
 </div>
 
-<!-- NEWS -->
-<div class="page" id="page-news">
-  <div class="news-page">
+<div class="page" id="page-shopping">
+  <div style="padding:26px;max-width:800px;margin:0 auto;">
     <div class="news-header">
-      <div class="news-title">📰 Noticias</div>
-      <div class="news-tabs">
-        <button class="news-tab active" onclick="loadNews('general')" data-cat="general">🌐 General</button>
-        <button class="news-tab" onclick="loadNews('sports')" data-cat="sports">⚽ Deportes</button>
-        <button class="news-tab" onclick="loadNews('politics')" data-cat="politics">🏛️ Política</button>
-        <button class="news-tab" onclick="loadNews('food')" data-cat="food">🍽️ Comida</button>
-        <button class="news-tab" onclick="loadNews('health')" data-cat="health">❤️ Salud</button>
-      </div>
+      <div class="news-title">🛒 Lista de Supermercado</div>
     </div>
-    <div id="newsContainer" class="news-grid"></div>
+    <div class="card" style="margin-bottom:20px;">
+      <div style="display:flex;gap:10px;margin-bottom:15px;">
+        <input type="text" id="newShopItem" placeholder="Añadir producto (Ej. Ajo, Aceite, Almendras...)" onkeypress="if(event.key==='Enter')addShopItem()">
+        <button class="btn btn-green" onclick="addShopItem()">Añadir</button>
+      </div>
+      <div id="shopListContainer" class="priority-list"></div>
+    </div>
   </div>
 </div>
 
-<!-- RECIPES -->
+<div class="page" id="page-notes">
+  <div style="padding:26px;max-width:800px;margin:0 auto;">
+    <div class="news-header">
+      <div class="news-title">🎙️ Grabaciones y Notas Rápidas</div>
+      <button class="btn btn-danger" id="recordBtn" onclick="toggleRecord()">🔴 Grabar Nota de Voz</button>
+    </div>
+    <div class="card" style="margin-bottom:20px;">
+      <textarea id="newTextNote" placeholder="Escribe una nota rápida aquí..." style="min-height:80px;margin-bottom:10px;"></textarea>
+      <button class="btn btn-accent" onclick="addTextNote()">Guardar Texto</button>
+    </div>
+    <div id="notesContainer" style="display:grid;grid-template-columns:1fr;gap:10px;"></div>
+  </div>
+</div>
+
 <div class="page" id="page-recipes">
   <div class="recipe-page">
-    <div class="recipe-page-header">
-      <div>
-        <div class="recipe-page-title">🍳 Mi Recetario</div>
-        <div style="font-size:0.72rem;color:var(--muted);margin-top:2px" id="recipeCount">0 recetas guardadas</div>
-      </div>
-      <div style="display:flex;gap:7px;align-items:center">
-        <input type="text" id="recipeSearch" placeholder="🔍 Buscar receta..." style="width:190px" oninput="renderRecipes()">
-        <button class="btn btn-green" onclick="openRecipeModal()">+ Nueva Receta</button>
-      </div>
+    <div>
+      <div class="news-header"><div class="news-title">🍳 Recetario</div></div>
+      <div class="recipe-list" id="recipeList"></div>
     </div>
-    <div class="recipe-cat-tabs">
-      <button class="recipe-cat-tab active" data-cat="all" onclick="filterRecipeCat('all')">🍽️ Todas</button>
-      <button class="recipe-cat-tab" data-cat="desayuno" onclick="filterRecipeCat('desayuno')">🌅 Desayuno</button>
-      <button class="recipe-cat-tab" data-cat="almuerzo" onclick="filterRecipeCat('almuerzo')">☀️ Almuerzo</button>
-      <button class="recipe-cat-tab" data-cat="cena" onclick="filterRecipeCat('cena')">🌙 Cena</button>
-      <button class="recipe-cat-tab" data-cat="snack" onclick="filterRecipeCat('snack')">🍎 Snacks</button>
-      <button class="recipe-cat-tab" data-cat="postre" onclick="filterRecipeCat('postre')">🍰 Postres</button>
-    </div>
-    <div class="recipe-layout">
-      <div class="recipe-grid" id="recipeGrid"></div>
-      <div class="recipe-detail" id="recipeDetail">
-        <div class="recipe-detail-empty">👆 Selecciona una receta para ver los detalles</div>
-      </div>
+    <div class="recipe-detail" id="recipeDetail">
+      <div class="empty">👆 Selecciona una receta para verla y añadir ingredientes a tu lista de supermercado.</div>
     </div>
   </div>
 </div>
 
-<!-- RECIPE MODAL -->
-<div class="modal-overlay" id="recipeModal">
-  <div class="modal">
-    <div class="modal-title" id="modalTitle">Nueva Receta</div>
-    <div class="modal-grid">
-      <div><div class="input-label">Nombre *</div><input type="text" id="rName" placeholder="Ej: Arroz con pollo"></div>
-      <div><div class="input-label">Emoji</div><input type="text" id="rEmoji" placeholder="🍳" maxlength="2" style="font-size:1.15rem;text-align:center"></div>
-      <div><div class="input-label">Categoría</div><select id="rCat"><option value="desayuno">🌅 Desayuno</option><option value="almuerzo">☀️ Almuerzo</option><option value="cena">🌙 Cena</option><option value="snack">🍎 Snack</option><option value="postre">🍰 Postre</option></select></div>
-      <div><div class="input-label">Tiempo</div><input type="text" id="rTime" placeholder="Ej: 30 minutos"></div>
-      <div><div class="input-label">Porciones</div><input type="text" id="rServings" placeholder="Ej: 4 personas"></div>
-      <div><div class="input-label">Dificultad</div><select id="rDiff"><option value="Fácil">🟢 Fácil</option><option value="Media">🟡 Media</option><option value="Difícil">🔴 Difícil</option></select></div>
-    </div>
-    <div class="input-label" style="margin-bottom:5px">Ingredientes</div>
-    <div id="ingredientInputs">
-      <div class="ingredient-input-row"><input type="text" placeholder="Ej: 2 tazas de arroz" style="flex:1"><button class="btn btn-ghost btn-sm" onclick="removeIngRow(this)">✕</button></div>
-    </div>
-    <button class="btn btn-ghost btn-sm" onclick="addIngRow()" style="margin-bottom:11px">+ Añadir ingrediente</button>
-    <div class="input-label" style="margin-bottom:5px">Pasos de preparación</div>
-    <div id="stepInputs">
-      <div class="step-input-row"><span style="font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--accent2);min-width:19px;padding-top:9px">1</span><textarea placeholder="Describe el paso..." rows="2" style="flex:1"></textarea><button class="btn btn-ghost btn-sm" onclick="removeStepRow(this)" style="margin-top:7px">✕</button></div>
-    </div>
-    <button class="btn btn-ghost btn-sm" onclick="addStepRow()" style="margin-bottom:3px">+ Añadir paso</button>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeRecipeModal()">Cancelar</button>
-      <button class="btn btn-green" onclick="saveRecipe()">💾 Guardar</button>
-    </div>
-  </div>
-</div>
-
-<!-- SHOPPING MODAL -->
-<div class="modal-overlay" id="shoppingModal">
-  <div class="modal" style="max-width:390px">
-    <div class="modal-title">🛒 Lista de Compras</div>
-    <div style="font-size:0.74rem;color:var(--muted);margin-bottom:13px;font-family:'DM Mono',monospace" id="shoppingRecipeName"></div>
-    <div id="shoppingItems"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeShoppingModal()">Cerrar</button>
-      <button class="btn btn-green" onclick="copyShoppingList()">📋 Copiar lista</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
+<div id="toast"></div>
 
 <script>
-// ── STATE ──────────────────────────────────────────────────────────────────────
-let state={
-  projects:[],expenses:{},habits:{},
-  priorities:[{text:'',done:false},{text:'',done:false},{text:'',done:false}],
-  recipes:[],focusMode:null,shoppingChecked:{}
+let state = {
+  shoppingList: [],
+  notes: [],
+  recipes: [
+    {id:1, name:'Caldo de Huesos Mágico', cat:'Saludable', time:'24h', servings:'4', ingredients:['Huesos de res', 'Vinagre de manzana', 'Ajo', 'Cebolla', 'Zanahoria'], steps:['Hervir todo a fuego lento por 24 horas.']},
+    {id:2, name:'Cupcakes de Almendra', cat:'Postres', time:'35m', servings:'6', ingredients:['Harina de almendras', 'Huevo', 'Aceite de coco', 'Stevia'], steps:['Mezclar ingredientes y hornear a 350F por 25 minutos.']},
+    {id:3, name:'Sofrito Casero', cat:'Básicos', time:'15m', servings:'10', ingredients:['Cilantro', 'Ají dulce', 'Cebolla', 'Ajo', 'Pimiento rojo'], steps:['Licuar todos los ingredientes juntos y congelar en cubitos.']}
+  ]
 };
-const today=new Date().toISOString().split('T')[0];
 
-function save(){localStorage.setItem('vida_v4',JSON.stringify(state));}
-function load(){try{const r=localStorage.getItem('vida_v4');if(r)state={...state,...JSON.parse(r)};}catch(e){}}
+// ── INIT Y NAVEGACIÓN ────────────────────────────────────────────────────────────
+function load() { try { const r = localStorage.getItem('vida_assistant_v1'); if(r) state = {...state,...JSON.parse(r)}; } catch(e){} }
+function save() { localStorage.setItem('vida_assistant_v1', JSON.stringify(state)); }
+function showToast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
 
-function updateDate(){
-  document.getElementById('dateDisplay').textContent=
-    new Date().toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short',year:'numeric'}).toUpperCase();
-}
-
-function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2600);
-}
-
-// ── PAGES ──────────────────────────────────────────────────────────────────────
-const pageIds=['dashboard','gsuite','news','recipes'];
-function showPage(id){
+const pageIds = ['dashboard','gsuite','recipes','shopping','notes'];
+function showPage(id) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   document.querySelectorAll('.nav-tab')[pageIds.indexOf(id)].classList.add('active');
-  document.getElementById('focusBtn').style.display=id==='dashboard'?'flex':'none';
-  if(id==='news'&&!newsLoaded){loadNews('general');newsLoaded=true;}
-  if(id==='gsuite')renderGSuite();
-  if(id==='recipes')renderRecipes();
+  if(id==='shopping') renderShopList();
+  if(id==='notes') renderNotes();
+  if(id==='recipes') renderRecipes();
 }
 
-// ── FOCUS ──────────────────────────────────────────────────────────────────────
-const focusCycles=[null,'pro','personal'];
-let focusIndex=0;
-function toggleFocus(){
-  focusIndex=(focusIndex+1)%focusCycles.length;
-  state.focusMode=focusCycles[focusIndex];
-  const layout=document.getElementById('mainLayout');
-  layout.className='main';
-  const btn=document.getElementById('focusBtnText');
-  if(state.focusMode==='pro'){layout.classList.add('focus-pro');btn.textContent='← Ver Personal';showToast('Modo Enfoque: Trabajo');}
-  else if(state.focusMode==='personal'){layout.classList.add('focus-personal');btn.textContent='→ Ver Trabajo';showToast('Modo Enfoque: Personal');}
-  else{btn.textContent='Modo Enfoque';showToast('Vista completa');}
-  save();
-}
+document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short',year:'numeric'}).toUpperCase();
 
-// ── PROJECTS ──────────────────────────────────────────────────────────────────
-function addProject(){
-  const client=document.getElementById('projClient').value.trim();
-  const name=document.getElementById('projName').value.trim();
-  const date=document.getElementById('projDate').value;
-  if(!client||!name){showToast('⚠ Completa cliente y proyecto');return;}
-  state.projects.push({id:Date.now(),client,name,date,status:'pendiente'});
-  save();renderProjects();
-  document.getElementById('projClient').value='';document.getElementById('projName').value='';document.getElementById('projDate').value='';
-  showToast('✓ Proyecto añadido');
+// ── SUPERMERCADO ───────────────────────────────────────────────────────────────
+function addShopItem(text = null) {
+  const input = document.getElementById('newShopItem');
+  const val = text || input.value.trim();
+  if(!val) return;
+  if(!state.shoppingList) state.shoppingList = [];
+  state.shoppingList.push({ id: Date.now(), text: val, done: false });
+  input.value = '';
+  save(); renderShopList(); showToast('Añadido al supermercado 🛒');
 }
-function cycleStatus(id){
-  const s=['pendiente','proceso','entregado'];
-  const p=state.projects.find(p=>p.id===id);
-  if(p){p.status=s[(s.indexOf(p.status)+1)%s.length];save();renderProjects();}
-}
-function deleteProject(id){state.projects=state.projects.filter(p=>p.id!==id);save();renderProjects();}
-const sLabel={pendiente:'Pendiente',proceso:'En Proceso',entregado:'Entregado'};
-function renderProjects(){
-  const el=document.getElementById('projectList');
-  if(!state.projects.length){el.innerHTML='<div class="empty">Sin proyectos activos</div>';return;}
-  el.innerHTML=state.projects.map(p=>`
-    <div class="project-item">
-      <div><div class="project-name">${p.name}</div><div class="project-client">${p.client}</div></div>
-      <button class="status-badge status-${p.status}" onclick="cycleStatus(${p.id})">${sLabel[p.status]}</button>
-      <span class="project-date">${p.date?new Date(p.date+'T12:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short'}):'—'}</span>
-      <button class="delete-btn" onclick="deleteProject(${p.id})">✕</button>
-    </div>`).join('');
-}
-
-// ── AI EMAIL ──────────────────────────────────────────────────────────────────
-const eTpl=[
-  i=>`Asunto: Seguimiento — ${i.split(' ').slice(0,4).join(' ')}\n\nEstimado/a [nombre],\n\nEspero que este mensaje te encuentre bien. Me pongo en contacto para dar seguimiento a nuestra conversación sobre:\n\n"${i}"\n\nHemos avanzado en los puntos discutidos y estamos listos para el siguiente paso. ¿Tendrías disponibilidad esta semana?\n\nSaludos,\n[Tu nombre]`,
-  i=>`Asunto: Propuesta — ${i.split(' ').slice(0,3).join(' ')}\n\nHola [nombre],\n\nRespecto a ${i}, me gustaría compartirte una propuesta concreta que puede aportar valor significativo.\n\n¿Podemos agendar una llamada de 20 minutos esta semana para alinearnos?\n\nQuedo atento/a,\n[Tu nombre]`,
-];
-let emailGenerated='';
-async function generateEmail(){
-  const idea=document.getElementById('emailIdea').value.trim();
-  if(!idea){showToast('⚠ Escribe una idea');return;}
-  const res=document.getElementById('aiEmailResult'),status=document.getElementById('aiStatus'),copyBtn=document.getElementById('copyBtn');
-  res.className='ai-response visible';res.innerHTML='<div class="ai-label"><div class="ai-dot"></div> GENERANDO...</div>';
-  status.textContent='';copyBtn.style.display='none';
-  const tpl=eTpl[Math.floor(Math.random()*eTpl.length)](idea);emailGenerated=tpl;
-  let i=0;
-  res.innerHTML='<div class="ai-label">✦ BORRADOR IA</div><span id="typed"></span><span class="typing-cursor">|</span>';
-  await new Promise(r=>{
-    const iv=setInterval(()=>{
-      if(i<tpl.length){document.getElementById('typed').textContent+=tpl[i++];res.scrollTop=res.scrollHeight;}
-      else{clearInterval(iv);document.querySelector('.typing-cursor')?.remove();copyBtn.style.display='inline-block';status.textContent='✓ listo';r();}
-    },10);
-  });
-}
-function copyEmail(){navigator.clipboard.writeText(emailGenerated).then(()=>showToast('✓ Correo copiado'));}
-
-// ── TIMER ──────────────────────────────────────────────────────────────────────
-let timerInterval=null,timerSeconds=0,timerRunning=false;
-function pad(n){return String(n).padStart(2,'0');}
-function updateTimerDisplay(){
-  const h=Math.floor(timerSeconds/3600),m=Math.floor((timerSeconds%3600)/60),s=timerSeconds%60;
-  document.getElementById('timerDisplay').textContent=`${pad(h)}:${pad(m)}:${pad(s)}`;
-}
-function startTimer(){
-  if(timerRunning)return;
-  document.getElementById('timerLabel').textContent=document.getElementById('timerTask').value.trim()||'Cronómetro activo';
-  timerRunning=true;document.getElementById('timerStartBtn').style.display='none';document.getElementById('pauseBtn').style.display='inline-block';
-  timerInterval=setInterval(()=>{timerSeconds++;updateTimerDisplay();},1000);
-}
-function pauseTimer(){
-  if(!timerRunning)return;clearInterval(timerInterval);timerRunning=false;
-  document.getElementById('timerStartBtn').style.display='inline-block';document.getElementById('timerStartBtn').textContent='▶ Continuar';document.getElementById('pauseBtn').style.display='none';
-}
-function resetTimer(){
-  clearInterval(timerInterval);timerRunning=false;timerSeconds=0;updateTimerDisplay();
-  document.getElementById('timerLabel').textContent='Sin tarea activa';
-  document.getElementById('timerStartBtn').style.display='inline-block';document.getElementById('timerStartBtn').textContent='▶ Iniciar';document.getElementById('pauseBtn').style.display='none';
-}
-
-// ── HABITS ──────────────────────────────────────────────────────────────────────
-function toggleHabit(key){if(!state.habits[today])state.habits[today]={};state.habits[today][key]=!state.habits[today][key];save();renderHabits();}
-function renderHabits(){
-  const dh=state.habits[today]||{};
-  ['agua','ejercicio','lectura','meditacion'].forEach(h=>{const b=document.getElementById('hab-'+h);if(b)b.className='habit-btn'+(dh[h]?' done':'');});
-}
-
-// ── EXPENSES ──────────────────────────────────────────────────────────────────
-function addExpense(){
-  const desc=document.getElementById('expDesc').value.trim();
-  const amount=parseFloat(document.getElementById('expAmount').value);
-  const type=document.getElementById('expType').value;
-  if(!desc||isNaN(amount)||amount<=0){showToast('⚠ Completa descripción y monto');return;}
-  if(!state.expenses[today])state.expenses[today]=[];
-  state.expenses[today].push({id:Date.now(),desc,amount,type});
-  save();renderExpenses();document.getElementById('expDesc').value='';document.getElementById('expAmount').value='';
-  showToast('✓ Movimiento registrado');
-}
-function deleteExpense(id){state.expenses[today]=(state.expenses[today]||[]).filter(e=>e.id!==id);save();renderExpenses();}
-function renderExpenses(){
-  const list=state.expenses[today]||[];
-  const el=document.getElementById('expenseList');
-  el.innerHTML=list.length?list.map(e=>`
-    <div class="expense-item">
-      <span style="font-weight:500">${e.desc}</span>
-      <div style="display:flex;align-items:center;gap:7px">
-        <span class="expense-amount ${e.type==='ingreso'?'income':''}">${e.type==='ingreso'?'+':'-'}$${e.amount.toFixed(2)}</span>
-        <button class="delete-btn" onclick="deleteExpense(${e.id})">✕</button>
-      </div>
-    </div>`).join(''):'<div class="empty">Sin movimientos hoy</div>';
-  const inc=list.filter(e=>e.type==='ingreso').reduce((s,e)=>s+e.amount,0);
-  const exp=list.filter(e=>e.type==='gasto').reduce((s,e)=>s+e.amount,0);
-  const bal=inc-exp;
-  document.getElementById('totalIncome').textContent=`$${inc.toFixed(2)}`;
-  document.getElementById('totalExpense').textContent=`$${exp.toFixed(2)}`;
-  const b=document.getElementById('totalBalance');b.textContent=`$${Math.abs(bal).toFixed(2)}`;b.style.color=bal>=0?'var(--success)':'var(--danger)';
-}
-
-// ── PRIORITIES ──────────────────────────────────────────────────────────────────
-function savePriorities(){for(let i=0;i<3;i++){const el=document.querySelector(`#pr-${i} .priority-text`);if(el)state.priorities[i].text=el.value;}save();}
-function togglePriority(i){state.priorities[i].done=!state.priorities[i].done;save();renderPriorities();}
-function renderPriorities(){
-  for(let i=0;i<3;i++){
-    const item=document.getElementById(`pr-${i}`);
-    const input=item.querySelector('.priority-text');
-    const check=item.querySelector('.priority-check');
-    const p=state.priorities[i];
-    input.value=p.text||'';
-    if(p.done){item.classList.add('done-task');check.textContent='✓';}
-    else{item.classList.remove('done-task');check.textContent='';}
-  }
-}
-
-// ── GOOGLE SUITE ──────────────────────────────────────────────────────────────
-const gmailData=[
-  {unread:true,from:'Carlos Mendoza',subject:'Propuesta revisada Q4',time:'09:14'},
-  {unread:true,from:'María García',subject:'Reunión mañana a las 10am',time:'08:52'},
-  {unread:true,from:'Notion',subject:'Tu resumen semanal está listo',time:'08:00'},
-  {unread:false,from:'Google',subject:'Alerta de seguridad: nuevo acceso',time:'Ayer'},
-  {unread:false,from:'Stripe',subject:'Pago recibido: $2,400.00',time:'Ayer'},
-];
-const calData=[
-  {title:'Standup diario',time:'09:00 – 09:30',color:'#4285f4'},
-  {title:'Llamada con cliente TechCorp',time:'11:00 – 12:00',color:'#0f9d58'},
-  {title:'Revisión de diseños',time:'14:00 – 15:00',color:'#f4b400'},
-  {title:'Trabajo profundo',time:'15:30 – 17:30',color:'#db4437'},
-];
-const driveData=[
-  {icon:'📊',name:'Reporte Q3 2024.xlsx',modified:'Hace 2h'},
-  {icon:'📄',name:'Propuesta Cliente A.docx',modified:'Ayer'},
-  {icon:'📊',name:'Dashboard Métricas.gsheet',modified:'Hace 3 días'},
-  {icon:'🖼️',name:'Presentación Producto.pptx',modified:'Hace 1 semana'},
-];
-const tasksData=[
-  {done:false,title:'Enviar factura a cliente X',due:'Hoy'},
-  {done:false,title:'Revisar contrato de servicio',due:'Mañana'},
-  {done:true,title:'Actualizar portfolio online',due:'Completada'},
-  {done:false,title:'Llamar al contador',due:'Viernes'},
-];
-function renderGSuite(){
-  document.getElementById('gmailList').innerHTML=gmailData.map(m=>`
-    <div class="g-item" onclick="showToast('Abre Gmail para leer este correo')">
-      <div class="g-item-dot ${m.unread?'unread':'read'}"></div>
-      <div class="g-item-content"><div class="g-item-title" style="font-weight:${m.unread?600:400}">${m.from}</div><div class="g-item-sub">${m.subject}</div></div>
-      <div class="g-item-time">${m.time}</div>
-    </div>`).join('');
-  document.getElementById('calendarList').innerHTML=calData.map(e=>`
-    <div class="gcal-event" onclick="showToast('Abre Google Calendar para ver este evento')">
-      <div class="gcal-bar" style="background:${e.color}"></div>
-      <div><div class="gcal-title">${e.title}</div><div class="gcal-time">${e.time}</div></div>
-    </div>`).join('');
-  document.getElementById('driveList').innerHTML=driveData.map(f=>`
-    <div class="g-item" onclick="showToast('Abre Google Drive para acceder a este archivo')">
-      <span style="font-size:1.05rem">${f.icon}</span>
-      <div class="g-item-content"><div class="g-item-title">${f.name}</div><div class="g-item-sub">${f.modified}</div></div>
-    </div>`).join('');
-  document.getElementById('tasksList').innerHTML=tasksData.map(t=>`
-    <div class="g-item" onclick="showToast('Conecta Google Tasks para gestionar tus tareas')">
-      <div style="width:15px;height:15px;border-radius:50%;border:1.5px solid ${t.done?'var(--accent2)':'var(--border)'};background:${t.done?'var(--accent2)':'transparent'};display:flex;align-items:center;justify-content:center;font-size:0.52rem;color:#fff;flex-shrink:0">${t.done?'✓':''}</div>
-      <div class="g-item-content"><div class="g-item-title" style="${t.done?'text-decoration:line-through;opacity:0.5':''}">${t.title}</div><div class="g-item-sub">${t.due}</div></div>
-    </div>`).join('');
-}
-function connectGoogle(){showToast('Configura tu OAuth2 Client ID en Google Cloud Console para activar');}
-
-// ── NEWS ──────────────────────────────────────────────────────────────────────
-let newsLoaded=false;
-const newsMock={
-  general:[
-    {cat:'General',title:'Puerto Rico aprueba inversión histórica en infraestructura digital',summary:'El gobierno anuncia $800M para fibra óptica y conectividad en municipios rurales de toda la isla.',source:'El Nuevo Día',time:'Hace 1h'},
-    {cat:'General',title:'La inteligencia artificial transforma el mercado laboral en América Latina',summary:'Expertos debaten el impacto de la automatización en empleos de servicios y manufactura regional.',source:'BBC Mundo',time:'Hace 2h'},
-    {cat:'General',title:'Nuevas regulaciones de criptomonedas entran en vigor este mes',summary:'Los reguladores financieros establecen marcos claros para exchanges y proyectos DeFi en la región.',source:'CoinDesk ES',time:'Hace 3h'},
-    {cat:'General',title:'Auge del trabajo remoto redefine los centros urbanos del Caribe',summary:'Las ciudades medianas experimentan un boom demográfico mientras las metrópolis pierden residentes.',source:'Bloomberg',time:'Hace 5h'},
-  ],
-  sports:[
-    {cat:'Deportes',title:'Puerto Rico clasifica al Mundial de Baloncesto 2026',summary:'La selección nacional logra su clasificación histórica tras derrotar a República Dominicana en el partido decisivo.',source:'ESPN Deportes',time:'Hace 30min'},
-    {cat:'Deportes',title:'Serie Mundial: Los equipos se preparan para la fase de playoffs',summary:'Los favoritos de la temporada inician sus estrategias para el torneo más esperado del béisbol.',source:'MLB.com',time:'Hace 1h'},
-    {cat:'Deportes',title:'Nuevo récord mundial en los 100 metros planos',summary:'El velocista establece una marca histórica de 9.54 segundos en el gran prix internacional.',source:'Marca',time:'Hace 2h'},
-    {cat:'Deportes',title:'NBA presenta el calendario completo de la temporada 2025-26',summary:'Los equipos conocen sus rivales y fechas para una temporada que promete grandes rivalidades.',source:'NBA.com',time:'Hace 4h'},
-  ],
-  politics:[
-    {cat:'Política',title:'Senado de EE.UU. debate nueva legislación sobre el estatus de Puerto Rico',summary:'Legisladores discuten el futuro político de la isla tras los resultados del referéndum más reciente.',source:'The Hill',time:'Hace 45min'},
-    {cat:'Política',title:'Cumbre climática: 120 naciones firman acuerdo de emisiones cero para 2035',summary:'El acuerdo histórico vincula a las principales economías mundiales en metas ambiciosas de carbono.',source:'Reuters',time:'Hace 2h'},
-    {cat:'Política',title:'Elecciones en varios países latinoamericanos marcan el año político',summary:'Analistas evalúan las tendencias electorales y los cambios en el mapa político de la región.',source:'El País',time:'Hace 3h'},
-    {cat:'Política',title:'Congreso aprueba reforma al sistema de salud pública',summary:'La medida amplía la cobertura de Medicaid y establece nuevos centros de salud comunitaria.',source:'Politico',time:'Hace 5h'},
-  ],
-  food:[
-    {cat:'Comida',title:'La cocina puertorriqueña conquista los mejores restaurantes de Nueva York',summary:'Chefs boricuas llevan el mofongo, la alcapurria y el sofrito a las mesas de alta gastronomía en Manhattan.',source:'Eater NY',time:'Hace 1h'},
-    {cat:'Comida',title:'Tendencias gastronómicas 2025: fermentación y cocina de temporada',summary:'Los chefs más influyentes apuestan por técnicas ancestrales e ingredientes locales de temporada.',source:'Food & Wine',time:'Hace 2h'},
-    {cat:'Comida',title:'El aguacate pierde terreno ante nuevos superalimentos locales',summary:'Investigadores destacan las propiedades nutricionales de la moringa, el amaranto y el miso artesanal.',source:'Bon Appétit',time:'Hace 3h'},
-    {cat:'Comida',title:'Guía completa: los mejores restaurantes del Caribe en 2025',summary:'La nueva guía Michelin para el Caribe revela los establecimientos que marcan la pauta de la región.',source:'Michelin Guide',time:'Hace 6h'},
-  ],
-  health:[
-    {cat:'Salud',title:'Nuevo estudio revela el impacto del sueño en la salud cardiovascular',summary:'Dormir menos de 7 horas aumenta el riesgo de enfermedades cardíacas en un 34%, según investigación.',source:'New England Journal',time:'Hace 1h'},
-    {cat:'Salud',title:'Avance en tratamiento para la diabetes tipo 2 sin medicación diaria',summary:'Un nuevo implante de células madre permite controlar el azúcar en sangre por hasta 3 meses.',source:'Science',time:'Hace 2h'},
-    {cat:'Salud',title:'Meditación y ejercicio reducen la ansiedad mejor que los fármacos',summary:'Meta-análisis de 200 estudios confirma la efectividad de intervenciones no farmacológicas para el bienestar.',source:'JAMA',time:'Hace 4h'},
-    {cat:'Salud',title:'OMS actualiza guías de alimentación saludable para América Latina',summary:'Las nuevas recomendaciones enfatizan legumbres, frutas locales y reducción de ultraprocesados.',source:'OPS/OMS',time:'Hace 5h'},
-  ],
-};
-const catColors={general:'#1a6ea8',sports:'#1a8c6e',politics:'#8c6e1a',food:'#8c1a3a',health:'#1a8c8c'};
-function loadNews(cat){
-  document.querySelectorAll('.news-tab').forEach(t=>t.classList.toggle('active',t.dataset.cat===cat));
-  document.getElementById('newsContainer').innerHTML=`<div class="news-loading"><span class="spinner"></span> Cargando noticias...</div>`;
-  setTimeout(()=>{
-    document.getElementById('newsContainer').innerHTML=(newsMock[cat]||[]).map(a=>`
-      <div class="news-card" onclick="showToast('${a.source}: ${a.title.slice(0,35)}...')">
-        <div class="news-card-cat" style="color:${catColors[cat]}">${a.cat}</div>
-        <div class="news-card-title">${a.title}</div>
-        <div class="news-card-summary">${a.summary}</div>
-        <div class="news-card-footer"><span class="news-source">${a.source}</span><span class="news-time">${a.time}</span></div>
-      </div>`).join('');
-  },600);
-}
-
-// ── RECIPES ──────────────────────────────────────────────────────────────────
-let selectedRecipe=null,recipeCatFilter='all',editingRecipeId=null;
-const defaultRecipes=[
-  {id:1,name:'Arroz con Gandules',emoji:'🍚',cat:'almuerzo',time:'45 min',servings:'6 personas',diff:'Fácil',
-   ingredients:['2 tazas de arroz','1 lata de gandules verdes','1/4 taza de sofrito','1 sobre de sazón con achiote','1/4 taza de recao picado','2 tazas de agua','Sal al gusto'],
-   steps:['Calienta el caldero a fuego medio y agrega el sofrito. Sofríe por 2-3 minutos hasta que suelte su aroma.','Agrega el sazón y mezcla bien. Añade los gandules con todo su líquido.','Incorpora el arroz y el recao. Mezcla todo bien para que se impregne de sabor.','Agrega el agua y la sal. Sube el fuego a alto y espera que hierva.','Cuando el agua se consuma al nivel del arroz, baja el fuego al mínimo, tapa y cocina 20 minutos.']},
-  {id:2,name:'Tostones',emoji:'🍌',cat:'snack',time:'20 min',servings:'4 personas',diff:'Fácil',
-   ingredients:['2 plátanos verdes','Aceite de maíz para freír','Sal al gusto','Ajo en polvo (opcional)'],
-   steps:['Pela los plátanos y córtalos en rodajas de 1 pulgada de grosor.','Calienta el aceite en un sartén a fuego medio-alto. Fríe las rodajas 3 minutos por lado hasta dorar.','Retira del aceite y aplasta cada pieza con un tostonero o el fondo de un vaso.','Regresa los tostones al aceite caliente y fríe nuevamente hasta que estén crujientes y dorados.','Escurre en papel absorbente, sazona con sal y ajo en polvo al gusto.']},
-  {id:3,name:'Tembleque',emoji:'🍮',cat:'postre',time:'4 horas',servings:'8 porciones',diff:'Fácil',
-   ingredients:['2 latas de leche de coco (400ml c/u)','1/2 taza de maicena','1/2 taza de azúcar blanca','1 pizca de sal','Canela en polvo para decorar'],
-   steps:['En una olla mediana, disuelve la maicena en la leche de coco fría. Mezcla bien para evitar grumos.','Agrega el azúcar y la sal. Lleva a fuego medio revolviendo constantemente.','Continúa revolviendo hasta que la mezcla espese y burbujee, unos 15-18 minutos.','Vierte en moldes individuales o uno grande ligeramente engrasado.','Deja enfriar a temperatura ambiente, luego refrigera un mínimo de 3-4 horas. Desmolda y decora con canela.']},
-];
-function initRecipes(){if(!state.recipes||!state.recipes.length)state.recipes=[...defaultRecipes];}
-function filterRecipeCat(cat){
-  recipeCatFilter=cat;
-  document.querySelectorAll('.recipe-cat-tab').forEach(t=>t.classList.toggle('active',t.dataset.cat===cat));
-  renderRecipes();
-}
-function renderRecipes(){
-  initRecipes();
-  const search=(document.getElementById('recipeSearch')?.value||'').toLowerCase();
-  const recipes=state.recipes.filter(r=>(recipeCatFilter==='all'||r.cat===recipeCatFilter)&&(!search||r.name.toLowerCase().includes(search)));
-  const grid=document.getElementById('recipeGrid');
-  document.getElementById('recipeCount').textContent=`${state.recipes.length} receta${state.recipes.length!==1?'s':''} guardada${state.recipes.length!==1?'s':''}`;
-  grid.innerHTML=recipes.length?recipes.map(r=>`
-    <div class="recipe-card ${selectedRecipe===r.id?'selected':''}" onclick="selectRecipe(${r.id})">
-      <div class="recipe-emoji">${r.emoji||'🍽️'}</div>
-      <div class="recipe-card-body">
-        <div class="recipe-card-name">${r.name}</div>
-        <div class="recipe-card-cat">${r.cat}</div>
-        <div class="recipe-card-meta"><span>⏱ ${r.time}</span><span>👥 ${r.servings}</span></div>
-      </div>
-    </div>`).join(''):'<div class="empty" style="grid-column:1/-1;padding:38px">No hay recetas en esta categoría</div>';
-  if(selectedRecipe)renderRecipeDetail(selectedRecipe);
-}
-function selectRecipe(id){selectedRecipe=id;renderRecipes();renderRecipeDetail(id);}
-function renderRecipeDetail(id){
-  const r=state.recipes.find(r=>r.id===id);
-  if(!r){document.getElementById('recipeDetail').innerHTML='<div class="recipe-detail-empty">👆 Selecciona una receta</div>';return;}
-  document.getElementById('recipeDetail').innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
-      <div style="flex:1">
-        <div class="recipe-detail-emoji">${r.emoji||'🍽️'}</div>
-        <div class="recipe-detail-name">${r.name}</div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:5px">
-          <span class="recipe-card-cat">${r.cat}</span>
-          <span style="font-size:0.69rem;color:var(--muted)">⏱ ${r.time}</span>
-          <span style="font-size:0.69rem;color:var(--muted)">👥 ${r.servings}</span>
-          <span style="font-size:0.69rem;color:var(--muted)">📊 ${r.diff}</span>
-        </div>
-      </div>
-      <div style="display:flex;gap:5px;flex-shrink:0">
-        <button class="btn btn-sm" onclick="openRecipeModal(${r.id})">✏️</button>
-        <button class="btn btn-sm btn-danger" onclick="deleteRecipe(${r.id})">✕</button>
+function renderShopList() {
+  const c = document.getElementById('shopListContainer');
+  if(!state.shoppingList || state.shoppingList.length===0){ c.innerHTML = '<div class="empty">Tu lista está vacía</div>'; return; }
+  c.innerHTML = state.shoppingList.map(i => `
+    <div class="priority-item ${i.done?'done-task':''}" style="justify-content:space-between;">
+      <span style="font-size:0.85rem;">${i.text}</span>
+      <div>
+        <button class="btn btn-sm ${i.done?'btn-green':'btn'}" onclick="toggleShopItem(${i.id})">✓</button>
+        <button class="btn btn-sm btn-ghost" style="color:var(--danger)" onclick="deleteShopItem(${i.id})">✕</button>
       </div>
     </div>
-    <hr class="divider">
-    <div class="recipe-section-title">Ingredientes</div>
-    <ul class="ingredient-list">${r.ingredients.map(i=>`<li class="ingredient-item"><div class="ingredient-bullet"></div>${i}</li>`).join('')}</ul>
-    <div class="recipe-section-title">Preparación</div>
-    <ol class="step-list">${r.steps.map((s,i)=>`<li class="step-item"><span class="step-num">${i+1}</span><span>${s}</span></li>`).join('')}</ol>
-    <button class="btn shopping-list-btn" onclick="openShoppingList(${r.id})">🛒 Generar lista de compras</button>
+  `).join('');
+}
+function toggleShopItem(id) { const i = state.shoppingList.find(x=>x.id===id); if(i){ i.done = !i.done; save(); renderShopList(); } }
+function deleteShopItem(id) { state.shoppingList = state.shoppingList.filter(x=>x.id!==id); save(); renderShopList(); }
+
+// ── RECETAS ──────────────────────────────────────────────────────────────────
+function renderRecipes() {
+  document.getElementById('recipeList').innerHTML = state.recipes.map(r => `
+    <div class="recipe-card" onclick="renderRecipeDetail(${r.id})">
+      <div><div style="font-weight:600;font-size:0.9rem;">${r.name}</div><div style="font-size:0.7rem;color:var(--muted)">${r.cat} • ${r.time}</div></div>
+    </div>`).join('');
+}
+function renderRecipeDetail(id) {
+  const r = state.recipes.find(x=>x.id===id);
+  document.getElementById('recipeDetail').innerHTML = `
+    <h2 style="font-family:'DM Serif Display';color:var(--accent);margin-bottom:15px;">${r.name}</h2>
+    <button class="btn btn-green" style="width:100%;margin-bottom:20px;" onclick="addRecipeToShop(${r.id})">🛒 Enviar ingredientes al Supermercado</button>
+    <div style="margin-bottom:15px"><strong>Ingredientes:</strong><ul>${r.ingredients.map(i=>`<li style="margin-left:20px;font-size:0.85rem;">${i}</li>`).join('')}</ul></div>
+    <div><strong>Pasos:</strong><ol>${r.steps.map(s=>`<li style="margin-left:20px;font-size:0.85rem;">${s}</li>`).join('')}</ol></div>
   `;
 }
-function openRecipeModal(id=null){
-  editingRecipeId=id;
-  document.getElementById('recipeModal').classList.add('open');
-  if(id){
-    const r=state.recipes.find(r=>r.id===id);
-    document.getElementById('modalTitle').textContent='Editar Receta';
-    document.getElementById('rName').value=r.name;document.getElementById('rEmoji').value=r.emoji||'';
-    document.getElementById('rCat').value=r.cat;document.getElementById('rTime').value=r.time;
-    document.getElementById('rServings').value=r.servings;document.getElementById('rDiff').value=r.diff;
-    document.getElementById('ingredientInputs').innerHTML=r.ingredients.map(i=>`<div class="ingredient-input-row"><input type="text" value="${i}" style="flex:1"><button class="btn btn-ghost btn-sm" onclick="removeIngRow(this)">✕</button></div>`).join('');
-    document.getElementById('stepInputs').innerHTML=r.steps.map((s,idx)=>`<div class="step-input-row"><span style="font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--accent2);min-width:19px;padding-top:9px">${idx+1}</span><textarea style="flex:1" rows="2">${s}</textarea><button class="btn btn-ghost btn-sm" onclick="removeStepRow(this)" style="margin-top:7px">✕</button></div>`).join('');
+function addRecipeToShop(id) {
+  const r = state.recipes.find(x=>x.id===id);
+  r.ingredients.forEach(ing => addShopItem(ing));
+  showToast('Ingredientes transferidos a tu lista');
+}
+
+// ── NOTAS Y GRABADORA DE VOZ ──────────────────────────────────────────────────
+let mediaRecorder; let audioChunks = []; let isRecording = false;
+function toggleRecord() {
+  const btn = document.getElementById('recordBtn');
+  if(!isRecording) {
+    navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
+      mediaRecorder = new MediaRecorder(stream); mediaRecorder.start();
+      isRecording = true; btn.textContent = '⏹ Detener Grabación'; btn.style.animation = 'pulse 1.2s infinite';
+      audioChunks = [];
+      mediaRecorder.addEventListener("dataavailable", e => audioChunks.push(e.data));
+      mediaRecorder.addEventListener("stop", () => {
+        const audioUrl = URL.createObjectURL(new Blob(audioChunks, {type:'audio/webm'}));
+        saveNoteData({ type:'audio', url:audioUrl, date:new Date().toLocaleString() });
+      });
+    }).catch(e => showToast('Necesitas dar permiso al micrófono 🎙️'));
   } else {
-    document.getElementById('modalTitle').textContent='Nueva Receta';
-    ['rName','rEmoji','rTime','rServings'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('rCat').value='desayuno';document.getElementById('rDiff').value='Fácil';
-    document.getElementById('ingredientInputs').innerHTML=`<div class="ingredient-input-row"><input type="text" placeholder="Ej: 2 tazas de arroz" style="flex:1"><button class="btn btn-ghost btn-sm" onclick="removeIngRow(this)">✕</button></div>`;
-    document.getElementById('stepInputs').innerHTML=`<div class="step-input-row"><span style="font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--accent2);min-width:19px;padding-top:9px">1</span><textarea placeholder="Describe el paso..." rows="2" style="flex:1"></textarea><button class="btn btn-ghost btn-sm" onclick="removeStepRow(this)" style="margin-top:7px">✕</button></div>`;
+    mediaRecorder.stop(); isRecording = false;
+    btn.textContent = '🔴 Grabar Nota de Voz'; btn.style.animation = 'none'; showToast('Audio Guardado');
   }
 }
-function closeRecipeModal(){document.getElementById('recipeModal').classList.remove('open');}
-function addIngRow(){
-  const d=document.createElement('div');d.className='ingredient-input-row';
-  d.innerHTML=`<input type="text" placeholder="Añade un ingrediente..." style="flex:1"><button class="btn btn-ghost btn-sm" onclick="removeIngRow(this)">✕</button>`;
-  document.getElementById('ingredientInputs').appendChild(d);
+function addTextNote() {
+  const input = document.getElementById('newTextNote');
+  if(!input.value.trim()) return;
+  saveNoteData({ type: 'text', content: input.value.trim(), date: new Date().toLocaleString() });
+  input.value = ''; showToast('Nota Guardada');
 }
-function removeIngRow(btn){const rows=document.getElementById('ingredientInputs').querySelectorAll('.ingredient-input-row');if(rows.length>1)btn.closest('.ingredient-input-row').remove();}
-function addStepRow(){
-  const c=document.getElementById('stepInputs');const n=c.querySelectorAll('.step-input-row').length+1;
-  const d=document.createElement('div');d.className='step-input-row';
-  d.innerHTML=`<span style="font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--accent2);min-width:19px;padding-top:9px">${n}</span><textarea placeholder="Describe el paso..." rows="2" style="flex:1"></textarea><button class="btn btn-ghost btn-sm" onclick="removeStepRow(this)" style="margin-top:7px">✕</button>`;
-  c.appendChild(d);
+function saveNoteData(n) {
+  if(!state.notes) state.notes = []; n.id = Date.now(); state.notes.unshift(n);
+  // Salvamos solo texto localmente, audios se mantienen temporalmente en sesión
+  const temp = {...state}; temp.notes = state.notes.filter(x=>x.type==='text');
+  localStorage.setItem('vida_assistant_v1', JSON.stringify(temp)); renderNotes();
 }
-function removeStepRow(btn){const rows=document.getElementById('stepInputs').querySelectorAll('.step-input-row');if(rows.length>1)btn.closest('.step-input-row').remove();}
-function saveRecipe(){
-  const name=document.getElementById('rName').value.trim();
-  if(!name){showToast('⚠ El nombre es obligatorio');return;}
-  const ingredients=[...document.getElementById('ingredientInputs').querySelectorAll('input')].map(i=>i.value.trim()).filter(Boolean);
-  const steps=[...document.getElementById('stepInputs').querySelectorAll('textarea')].map(t=>t.value.trim()).filter(Boolean);
-  if(!ingredients.length){showToast('⚠ Añade al menos un ingrediente');return;}
-  if(!steps.length){showToast('⚠ Añade al menos un paso');return;}
-  const recipe={id:editingRecipeId||Date.now(),name,emoji:document.getElementById('rEmoji').value||'🍽️',
-    cat:document.getElementById('rCat').value,time:document.getElementById('rTime').value||'—',
-    servings:document.getElementById('rServings').value||'—',diff:document.getElementById('rDiff').value,
-    ingredients,steps};
-  if(editingRecipeId){state.recipes=state.recipes.map(r=>r.id===editingRecipeId?recipe:r);showToast('✓ Receta actualizada');}
-  else{state.recipes.push(recipe);showToast('✓ Receta guardada');}
-  save();closeRecipeModal();selectedRecipe=recipe.id;renderRecipes();
+function renderNotes() {
+  const c = document.getElementById('notesContainer');
+  if(!state.notes || state.notes.length===0){ c.innerHTML = '<div class="empty">No hay notas o grabaciones</div>'; return; }
+  c.innerHTML = state.notes.map(n => `
+    <div class="card" style="margin-bottom:0;">
+      <div style="font-size:0.65rem;color:var(--muted);margin-bottom:5px;">${n.date}</div>
+      ${n.type === 'text' ? `<div style="font-size:0.85rem;white-space:pre-wrap;">${n.content}</div>` : `<audio controls src="${n.url}" style="height:40px;width:100%"></audio>`}
+      <div style="text-align:right;margin-top:10px;"><button class="btn btn-sm btn-ghost" style="color:var(--danger)" onclick="deleteNote(${n.id})">Eliminar</button></div>
+    </div>
+  `).join('');
 }
-function deleteRecipe(id){
-  if(!confirm('¿Eliminar esta receta?'))return;
-  state.recipes=state.recipes.filter(r=>r.id!==id);selectedRecipe=null;save();renderRecipes();
-  document.getElementById('recipeDetail').innerHTML='<div class="recipe-detail-empty">👆 Selecciona una receta</div>';
-  showToast('Receta eliminada');
-}
+function deleteNote(id) { state.notes = state.notes.filter(x=>x.id!==id); saveNoteData({type:'delete'}); renderNotes(); }
 
-// ── SHOPPING LIST ──────────────────────────────────────────────────────────────
-let currentShoppingRecipe=null;
-function openShoppingList(id){
-  currentShoppingRecipe=id;
-  const r=state.recipes.find(r=>r.id===id);if(!r)return;
-  if(!state.shoppingChecked[id])state.shoppingChecked[id]={};
-  document.getElementById('shoppingRecipeName').textContent=r.name;
-  renderShoppingItems(r);
-  document.getElementById('shoppingModal').classList.add('open');
-}
-function renderShoppingItems(r){
-  document.getElementById('shoppingItems').innerHTML=r.ingredients.map((ing,i)=>{
-    const checked=state.shoppingChecked[r.id]?.[i]||false;
-    return `<div class="shopping-item ${checked?'checked':''}" onclick="toggleShop(${r.id},${i})"><div class="shopping-check">${checked?'✓':''}</div><span>${ing}</span></div>`;
-  }).join('');
-}
-function toggleShop(recipeId,idx){
-  if(!state.shoppingChecked[recipeId])state.shoppingChecked[recipeId]={};
-  state.shoppingChecked[recipeId][idx]=!state.shoppingChecked[recipeId][idx];
-  save();renderShoppingItems(state.recipes.find(r=>r.id===recipeId));
-}
-function closeShoppingModal(){document.getElementById('shoppingModal').classList.remove('open');}
-function copyShoppingList(){
-  const r=state.recipes.find(r=>r.id===currentShoppingRecipe);if(!r)return;
-  navigator.clipboard.writeText(`Lista de compras: ${r.name}\n\n${r.ingredients.map(i=>`☐ ${i}`).join('\n')}`).then(()=>showToast('✓ Lista copiada'));
-}
-document.getElementById('recipeModal').addEventListener('click',function(e){if(e.target===this)closeRecipeModal();});
-document.getElementById('shoppingModal').addEventListener('click',function(e){if(e.target===this)closeShoppingModal();});
-
-// ── EXPORT ──────────────────────────────────────────────────────────────────────
-function exportData(){
-  const blob=new Blob([JSON.stringify({exportDate:new Date().toISOString(),...state},null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');
-  a.href=url;a.download=`vida-dashboard-${today}.json`;a.click();URL.revokeObjectURL(url);
-  showToast('✓ Datos exportados');
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
-function init(){
-  load();updateDate();setInterval(updateDate,60000);
-  renderProjects();renderHabits();renderExpenses();renderPriorities();initRecipes();
-  if(state.focusMode==='pro'){focusIndex=1;document.getElementById('mainLayout').classList.add('focus-pro');document.getElementById('focusBtnText').textContent='← Ver Personal';}
-  else if(state.focusMode==='personal'){focusIndex=2;document.getElementById('mainLayout').classList.add('focus-personal');document.getElementById('focusBtnText').textContent='→ Ver Trabajo';}
-}
-init();
+// Arrancar la app
+load(); renderRecipes(); renderShopList(); renderNotes();
 </script>
 </body>
 </html>
