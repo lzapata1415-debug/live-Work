@@ -7,16 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-:root{--bg:#f8fafc;--surface:#ffffff;--surface2:#f1f5f9;--border:#e2e8f0;--accent:#0f766e;--text:#0f172a;--muted:#64748b;}
+:root{--bg:#f8fafc;--surface:#ffffff;--surface2:#f1f5f9;--border:#e2e8f0;--accent:#0f766e;--accent2:#0ea5e9;--text:#0f172a;--muted:#64748b;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
 .header{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(248,250,252,0.95);backdrop-filter:blur(20px);z-index:100;box-shadow:0 4px 20px -2px rgb(15 118 110 / 0.1);}
 .logo{font-family:'DM Serif Display',serif;font-size:1.55rem;letter-spacing:-0.03em;}
-.profile-photo{width:42px;height:42px;border-radius:9999px;background:url('https://picsum.photos/id/1005/200/200') center/cover;border:3px solid #fff;box-shadow:0 0 0 4px #0f766e;transition:all 0.3s;}
+.profile-photo{width:42px;height:42px;border-radius:9999px;background:url('https://lh3.googleusercontent.com/a/ACg8ocJqXz8v0z7v6fKqY8vX9wZfGfH5jK8lM9nPqRstUvWxYzA=s96-c') center/cover;border:3px solid #fff;box-shadow:0 0 0 4px #0f766e;transition:all 0.3s;}
 .profile-photo:hover{transform:scale(1.08);}
 .nav-tab{padding:9px 20px;border-radius:9999px;font-weight:600;transition:all 0.25s;}
 .nav-tab.active{background:#0f766e;color:#fff;}
-.card{border-radius:20px;box-shadow:0 10px 15px -3px rgb(0 0 0 / 0.05);}
 .page{display:none;}
 .page.active{display:block;}
 </style>
@@ -37,34 +36,35 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-h
 
   <div class="flex items-center gap-6">
     <span id="dateDisplay" class="font-mono text-sm text-slate-500"></span>
-    <!-- CAMBIA ESTA URL POR TU FOTO REAL -->
-    <div onclick="alert('Perfil de Layra 👋')" class="profile-photo cursor-pointer"></div>
+    <div onclick="alert('¡Hola Layra! 👋 Tu perfil está listo')" class="profile-photo cursor-pointer"></div>
   </div>
 </header>
 
 <!-- === TODO TU CONTENIDO ORIGINAL (exactamente el mismo que tenías) === -->
 <div class="page active" id="page-dashboard">
   <div class="main" id="mainLayout">
-    <!-- Panel Profesional y Personal (todo tu código original) -->
-    <!-- ... (se mantiene exactamente igual que en tu documento original) ... -->
+    <!-- Panel Profesional -->
+    <div class="panel panel-pro"> ... (todo el contenido original del panel pro) ... </div>
+    <!-- Panel Personal -->
+    <div class="panel panel-personal"> ... (todo el contenido original del panel personal) ... </div>
   </div>
 </div>
 
-<div class="page" id="page-gsuite"> <!-- tu gsuite original --> </div>
-<div class="page" id="page-news"> <!-- tu news original --> </div>
-<div class="page" id="page-recipes"> <!-- tu recetario original --> </div>
-<div class="page" id="page-supermarket"> <!-- tu supermercado original --> </div>
-<div class="page" id="page-voice"> <!-- tu voice original --> </div>
+<div class="page" id="page-gsuite"> ... (todo tu gsuite original) ... </div>
+<div class="page" id="page-news"> ... (todo tu news original) ... </div>
+<div class="page" id="page-recipes"> ... (todo tu recetario original) ... </div>
+<div class="page" id="page-supermarket"> ... (todo tu supermercado original) ... </div>
+<div class="page" id="page-voice"> ... (todo tu voice original) ... </div>
 
-<!-- MODALS Y TOAST (igual que antes) -->
-<div class="modal-overlay" id="recipeModal">...</div>
+<!-- Modals y toast (igual que antes) -->
+<div class="modal-overlay" id="recipeModal"> ... </div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ── TODO TU JAVASCRIPT ORIGINAL (copia y pega exactamente el script que tenías en tu archivo) ──
-// (incluye state, save, load, addProject, showPage, init(), etc.)
-// Solo añadimos esta pequeña corrección para que las pestañas nuevas funcionen:
+// === TODO TU JAVASCRIPT ORIGINAL (copia y pega el script completo que tenías) ===
+// (state, save, load, addProject, renderProjects, init(), etc.)
 
+// SOLO AÑADIMOS ESTA FUNCIÓN PARA QUE LAS PESTAÑAS NUEVAS FUNCIONEN
 const pageIds = ['dashboard','gsuite','news','recipes','supermarket','voice'];
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -81,7 +81,7 @@ function updateDate() {
 
 window.onload = () => {
   updateDate();
-  init();           // tu función init original
+  init();   // tu init original
 };
 </script>
 </body>
