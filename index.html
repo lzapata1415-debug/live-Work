@@ -1461,30 +1461,31 @@ function exportData(type, fmt) {
 
 // ===== INIT =====
 function init() {
-  renderCal();
-  renderTasks();
-  renderNews();
-  renderRecipes();
-  renderShop();
-  searchStores();
-  renderMeetings();
-  renderFoodLog();
-  renderExLog();
-  renderRoutines();
-  updateDash();
-  // Set defaults
-  const evtDate = document.getElementById('ev-date');
-  if(evtDate) evtDate.value = today();
-  const gcEl = document.getElementById('gclientid');
-  if(gcEl && S.gClientId) gcEl.value = S.gClientId;
-  const gFields = {'g-cal':S.goals.cal,'g-prot':S.goals.prot,'g-weight':S.goals.weight,'g-curweight':S.goals.curWeight||'','g-exdays':S.goals.exDays,'g-water':S.goals.water};
-  Object.keys(gFields).forEach(id=>{ const el=document.getElementById(id); if(el&&gFields[id]) el.value=gFields[id]; });
+  try { renderCal(); } catch(e) {}
+  try { renderTasks(); } catch(e) {}
+  try { renderNews(); } catch(e) {}
+  try { renderRecipes(); } catch(e) {}
+  try { renderShop(); } catch(e) {}
+  try { searchStores(); } catch(e) {}
+  try { renderMeetings(); } catch(e) {}
+  try { renderFoodLog(); } catch(e) {}
+  try { renderExLog(); } catch(e) {}
+  try { renderRoutines(); } catch(e) {}
+  try { updateDash(); } catch(e) {}
+
+  try {
+    const evtDate = document.getElementById('ev-date');
+    if(evtDate) evtDate.value = today();
+    const gcEl = document.getElementById('gclientid');
+    if(gcEl && S.gClientId) gcEl.value = S.gClientId;
+    const gFields = {'g-cal':S.goals.cal,'g-prot':S.goals.prot,'g-weight':S.goals.weight,'g-curweight':S.goals.curWeight||'','g-exdays':S.goals.exDays,'g-water':S.goals.water};
+    Object.keys(gFields).forEach(id=>{ const el=document.getElementById(id); if(el&&gFields[id]) el.value=gFields[id]; });
+  } catch(e) {}
 }
 
 // ==========================================
-// FUNCIONALIDAD DE PESTAÑAS E INICIO (CORREGIDO)
+// FUNCIONALIDAD DE PESTAÑAS E INICIO
 // ==========================================
-
 function switchTab(tabId) {
     const sections = document.querySelectorAll('.module-section');
     sections.forEach(function(sec) {
@@ -1507,22 +1508,12 @@ function switchTab(tabId) {
     }
 }
 
-// Iniciar cuando el sistema esté listo
-if(document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() {
-      try { 
-        if (typeof init === 'function') init(); 
-      } catch(e) { 
-        console.warn("Aviso:", e); 
-      }
-  });
-} else {
-  try { 
-    if (typeof init === 'function') init(); 
-  } catch(e) { 
-    console.warn("Aviso:", e); 
-  }
-}
+// Iniciar el sistema cuando el HTML cargue
+window.addEventListener('DOMContentLoaded', function() {
+    if (typeof init === 'function') {
+        init();
+    }
+});
 </script>
 </body>
 </html>
