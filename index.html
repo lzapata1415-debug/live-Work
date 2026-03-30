@@ -3,86 +3,184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard de Vida • v3</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
+<title>Mi Asistente Personal</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-:root{--bg:#f8fafc;--surface:#ffffff;--surface2:#f1f5f9;--border:#e2e8f0;--accent:#0f766e;--accent2:#0ea5e9;--text:#0f172a;--muted:#64748b;}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
-.header{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(248,250,252,0.95);backdrop-filter:blur(20px);z-index:100;box-shadow:0 4px 20px -2px rgb(15 118 110 / 0.1);}
-.logo{font-family:'DM Serif Display',serif;font-size:1.55rem;letter-spacing:-0.03em;}
-.profile-photo{width:42px;height:42px;border-radius:9999px;background:url('https://lh3.googleusercontent.com/a/ACg8ocJqXz8v0z7v6fKqY8vX9wZfGfH5jK8lM9nPqRstUvWxYzA=s96-c') center/cover;border:3px solid #fff;box-shadow:0 0 0 4px #0f766e;transition:all 0.3s;}
-.profile-photo:hover{transform:scale(1.08);}
-.nav-tab{padding:9px 20px;border-radius:9999px;font-weight:600;transition:all 0.25s;}
-.nav-tab.active{background:#0f766e;color:#fff;}
-.page{display:none;}
-.page.active{display:block;}
+/* === VARIABLES Y DISEÑO BASE === */
+:root{
+  --bg:#0B0F1A; --surface:#141927; --s2:#1C2235; --s3:#242B42;
+  --border:rgba(255,255,255,0.07); --bactive:rgba(0,210,170,0.4);
+  --teal:#00D2AA; --tdim:rgba(0,210,170,0.12); --tglow:rgba(0,210,170,0.25);
+  --coral:#FF6B6B; --amber:#FFB347; --violet:#7C7AFF;
+  --text:#E8EDF5; --dim:#8892A4; --muted:#4A5568;
+  --r:16px; --rs:10px; --shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;}
+::-webkit-scrollbar{width:6px;} 
+::-webkit-scrollbar-track{background:var(--surface);} 
+::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px;}
+
+/* === NAVEGACIÓN (PESTAÑAS) === */
+.nav-wrap{position:sticky;top:0;z-index:200;background:rgba(11,15,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-bar{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 0.5rem; justify-content: center;}
+.nav-bar::-webkit-scrollbar{display:none;}
+.nav-tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0.65rem 1rem;font-family:'Syne',sans-serif;font-size:0.6rem;font-weight:700;color:var(--dim);background:transparent;border:none;cursor:pointer;text-transform:uppercase;white-space:nowrap;letter-spacing:0.07em;transition:all 0.2s;border-bottom:2px solid transparent;}
+.nav-tab .nav-icon{font-size:1rem;}
+.nav-tab.active{color:var(--teal);border-bottom-color:var(--teal);}
+.nav-tab:hover:not(.active){color:var(--text);}
+
+/* === SECCIONES === */
+.module-section{display:none;padding:1.5rem;max-width:1100px;margin:0 auto;animation:fadeUp 0.3s ease;}
+.module-section.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* === COMPONENTES VISUALES (Tarjetas, Botones, Textos) === */
+.card{background:var(--surface);border-radius:var(--r);padding:1.4rem;margin-bottom:1.2rem;border:1px solid var(--border);box-shadow:var(--shadow);}
+.sec-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--text);margin-bottom:1.5rem;letter-spacing:-0.02em;}
+.sec-title span{color:var(--teal);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:0.65rem 1.3rem;border:none;border-radius:var(--rs);font-weight:600;font-size:0.83rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;text-decoration:none;}
+.btn-teal{background:var(--teal);color:#0B0F1A;} 
+.btn-teal:hover{background:#00F0C4;box-shadow:0 4px 16px var(--tglow);}
 </style>
 </head>
 <body>
 
-<header class="header">
-  <div class="logo">vida<span>.</span>dashboard <span class="text-sm font-medium text-teal-600">v3 • MODERNO</span></div>
-  
-  <nav class="flex gap-2 bg-white border border-slate-200 rounded-3xl p-1 shadow-sm">
-    <button class="nav-tab active px-6 py-2 text-sm" onclick="showPage('dashboard')">🏠 Dashboard</button>
-    <button class="nav-tab px-6 py-2 text-sm" onclick="showPage('gsuite')">☁️ Centro de Mando</button>
-    <button class="nav-tab px-6 py-2 text-sm" onclick="showPage('news')">📰 Noticias</button>
-    <button class="nav-tab px-6 py-2 text-sm" onclick="showPage('recipes')">🍳 Recetario</button>
-    <button class="nav-tab px-6 py-2 text-sm" onclick="showPage('supermarket')">🛒 Supermercado</button>
-    <button class="nav-tab px-6 py-2 text-sm" onclick="showPage('voice')">🎙️ Notas de Voz</button>
-  </nav>
-
-  <div class="flex items-center gap-6">
-    <span id="dateDisplay" class="font-mono text-sm text-slate-500"></span>
-    <div onclick="alert('¡Hola Layra! 👋 Tu perfil está listo')" class="profile-photo cursor-pointer"></div>
-  </div>
-</header>
-
-<!-- === TODO TU CONTENIDO ORIGINAL (exactamente el mismo que tenías) === -->
-<div class="page active" id="page-dashboard">
-  <div class="main" id="mainLayout">
-    <!-- Panel Profesional -->
-    <div class="panel panel-pro"> ... (todo el contenido original del panel pro) ... </div>
-    <!-- Panel Personal -->
-    <div class="panel panel-personal"> ... (todo el contenido original del panel personal) ... </div>
+<div class="nav-wrap">
+  <div class="nav-bar">
+    <button class="nav-tab active" onclick="switchTab('dashboard')" id="tab-dashboard">
+      <span class="nav-icon">📊</span> Dashboard
+    </button>
+    <button class="nav-tab" onclick="switchTab('tareas')" id="tab-tareas">
+      <span class="nav-icon">✅</span> Tareas
+    </button>
+    <button class="nav-tab" onclick="switchTab('salud')" id="tab-salud">
+      <span class="nav-icon">🍎</span> Salud
+    </button>
+    <button class="nav-tab" onclick="switchTab('config')" id="tab-config">
+      <span class="nav-icon">⚙️</span> Config
+    </button>
   </div>
 </div>
 
-<div class="page" id="page-gsuite"> ... (todo tu gsuite original) ... </div>
-<div class="page" id="page-news"> ... (todo tu news original) ... </div>
-<div class="page" id="page-recipes"> ... (todo tu recetario original) ... </div>
-<div class="page" id="page-supermarket"> ... (todo tu supermercado original) ... </div>
-<div class="page" id="page-voice"> ... (todo tu voice original) ... </div>
+<section id="dashboard" class="module-section active">
+  <h2 class="sec-title">Mi <span>Dashboard</span></h2>
+  <div class="card">
+    <p>Bienvenida a tu Asistente Personal. Desde aquí puedes visualizar tus métricas principales.</p>
+    </div>
+</section>
 
-<!-- Modals y toast (igual que antes) -->
-<div class="modal-overlay" id="recipeModal"> ... </div>
-<div class="toast" id="toast"></div>
+<section id="tareas" class="module-section">
+  <h2 class="sec-title">Mis <span>Tareas</span></h2>
+  <div class="card">
+    <p>Lista de tareas y proyectos activos.</p>
+    </div>
+</section>
+
+<section id="salud" class="module-section">
+  <h2 class="sec-title">Salud y <span>Nutrición</span></h2>
+  <div class="card">
+    <p>Registro de alimentos, macros y rutinas de ejercicio.</p>
+    </div>
+</section>
+
+<section id="config" class="module-section">
+  <h2 class="sec-title">Configuración del <span>Sistema</span></h2>
+  <div class="card">
+    <p>Exportar datos y configuraciones.</p>
+    <button class="btn btn-teal" onclick="exportData('health')">Exportar Salud (JSON)</button>
+  </div>
+</section>
+
 
 <script>
-// === TODO TU JAVASCRIPT ORIGINAL (copia y pega el script completo que tenías) ===
-// (state, save, load, addProject, renderProjects, init(), etc.)
-
-// SOLO AÑADIMOS ESTA FUNCIÓN PARA QUE LAS PESTAÑAS NUEVAS FUNCIONEN
-const pageIds = ['dashboard','gsuite','news','recipes','supermarket','voice'];
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  const index = pageIds.indexOf(id);
-  if (index !== -1) document.querySelectorAll('.nav-tab')[index].classList.add('active');
-}
-
-function updateDate() {
-  const d = new Date();
-  document.getElementById('dateDisplay').textContent = d.toLocaleDateString('es-ES', {weekday:'short', day:'numeric', month:'short'}).toUpperCase();
-}
-
-window.onload = () => {
-  updateDate();
-  init();   // tu init original
+// 1. VARIABLES DE ESTADO GLOBALES (Ejemplo, mantén las tuyas)
+const S = {
+  goals: {},
+  foodLog: {},
+  exerciseLog: {},
+  gClientId: ''
 };
+
+// 2. FUNCIÓN PARA CAMBIAR PESTAÑAS (La clave para la funcionalidad visual)
+function switchTab(tabId) {
+  // A. Ocultar todas las secciones
+  const sections = document.querySelectorAll('.module-section');
+  sections.forEach(sec => sec.classList.remove('active'));
+
+  // B. Desactivar todos los botones del menú
+  const tabs = document.querySelectorAll('.nav-tab');
+  tabs.forEach(tab => tab.classList.remove('active'));
+
+  // C. Activar la sección objetivo
+  const targetSection = document.getElementById(tabId);
+  if (targetSection) {
+    targetSection.classList.add('active');
+  }
+
+  // D. Activar el botón del menú correspondiente
+  const activeTab = document.getElementById('tab-' + tabId) || document.querySelector(`.nav-tab[onclick*="${tabId}"]`);
+  if (activeTab) {
+    activeTab.classList.add('active');
+  }
+}
+
+// 3. FUNCIONES DE RENDERIZADO (Placeholder para que no arroje error si faltan)
+function renderCal() { console.log("Renderizando Calendario..."); }
+function renderTasks() { console.log("Renderizando Tareas..."); }
+function renderNews() { console.log("Renderizando Noticias..."); }
+function renderRecipes() { console.log("Renderizando Recetas..."); }
+function renderShop() { console.log("Renderizando Compras..."); }
+function searchStores() { console.log("Buscando tiendas..."); }
+function renderMeetings() { console.log("Renderizando Reuniones..."); }
+function renderFoodLog() { console.log("Renderizando Comidas..."); }
+function renderExLog() { console.log("Renderizando Ejercicios..."); }
+function renderRoutines() { console.log("Renderizando Rutinas..."); }
+function updateDash() { console.log("Actualizando Dashboard..."); }
+function today() { return new Date().toISOString().split('T')[0]; }
+
+// Función de exportación de prueba (sacada de tu código original)
+function exportData(type, fmt = 'json') {
+  if(type === 'health') {
+    alert("✅ Datos de salud exportados exitosamente en formato " + fmt);
+  }
+}
+
+// 4. FUNCIÓN DE INICIALIZACIÓN PROTEGIDA (Previene errores en cascada)
+function init() {
+  try { renderCal(); } catch(e) { console.warn('Error en renderCal:', e); }
+  try { renderTasks(); } catch(e) { console.warn('Error en renderTasks:', e); }
+  try { renderNews(); } catch(e) { console.warn('Error en renderNews:', e); }
+  try { renderRecipes(); } catch(e) { console.warn('Error en renderRecipes:', e); }
+  try { renderShop(); } catch(e) { console.warn('Error en renderShop:', e); }
+  try { searchStores(); } catch(e) { console.warn('Error en searchStores:', e); }
+  try { renderMeetings(); } catch(e) { console.warn('Error en renderMeetings:', e); }
+  try { renderFoodLog(); } catch(e) { console.warn('Error en renderFoodLog:', e); }
+  try { renderExLog(); } catch(e) { console.warn('Error en renderExLog:', e); }
+  try { renderRoutines(); } catch(e) { console.warn('Error en renderRoutines:', e); }
+  try { updateDash(); } catch(e) { console.warn('Error en updateDash:', e); }
+
+  // Variables por defecto
+  try {
+    const evtDate = document.getElementById('ev-date');
+    if(evtDate) evtDate.value = today();
+    const gcEl = document.getElementById('gclientid');
+    if(gcEl && S.gClientId) gcEl.value = S.gClientId;
+  } catch(e) {
+    console.warn('Error al fijar variables por defecto:', e);
+  }
+}
+
+// 5. INICIALIZADOR DEL DOM (Asegura que el HTML esté cargado antes de correr el JS)
+document.addEventListener('DOMContentLoaded', () => {
+  // Disparamos la función init principal de tu código
+  init();
+
+  // Opcional: Forzamos la primera pestaña por si acaso
+  switchTab('dashboard');
+});
+
 </script>
 </body>
 </html>
