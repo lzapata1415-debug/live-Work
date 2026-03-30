@@ -1481,18 +1481,8 @@ function init() {
   Object.keys(gFields).forEach(id=>{ const el=document.getElementById(id); if(el&&gFields[id]) el.value=gFields[id]; });
 }
 
-// Run init when DOM is ready
-if(document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
-const gcEl = document.getElementById('gclientid');
-  if(gcEl && S.gClientId) gcEl.value = S.gClientId;
-} // <- Esta es tu línea 1488 original
-
 // ==========================================
-// CÓDIGO AGREGADO: FUNCIONALIDAD DE PESTAÑAS E INICIO
+// FUNCIONALIDAD DE PESTAÑAS E INICIO (CORREGIDO)
 // ==========================================
 
 function switchTab(tabId) {
@@ -1517,18 +1507,22 @@ function switchTab(tabId) {
     }
 }
 
-window.addEventListener('DOMContentLoaded', function() {
-    try {
-        if (typeof init === 'function') {
-            init();
-        }
-    } catch (e) {
-        console.warn("Hubo un detalle cargando un widget, pero el sistema sigue en pie:", e);
-    }
-});
-
-</script>  </body>
-</html>
+// Iniciar cuando el sistema esté listo
+if(document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+      try { 
+        if (typeof init === 'function') init(); 
+      } catch(e) { 
+        console.warn("Aviso:", e); 
+      }
+  });
+} else {
+  try { 
+    if (typeof init === 'function') init(); 
+  } catch(e) { 
+    console.warn("Aviso:", e); 
+  }
+}
 </script>
 </body>
 </html>
