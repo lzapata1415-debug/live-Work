@@ -1486,7 +1486,8 @@ if(document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
-}const gcEl = document.getElementById('gclientid');
+}
+const gcEl = document.getElementById('gclientid');
   if(gcEl && S.gClientId) gcEl.value = S.gClientId;
 } // <- Esta es tu línea 1488 original
 
